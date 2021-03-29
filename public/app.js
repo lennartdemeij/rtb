@@ -241,7 +241,7 @@ jQuery(function($){
                 
                 $('.knop' + data.knopNr).addClass('knopactief');
                 if ($('#gameArea .knopactief').length > 2) {
-                    alert('gefeliciteerd!');
+                    setTimeout(function () { alert('gefeliciteerd!'); }, 2000);
                 }
             },
             someoneUpKnop: function (data) {
