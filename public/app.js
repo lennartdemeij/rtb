@@ -42,8 +42,11 @@ jQuery(function($){
          */
         onConnected: function () {
             // Cache a copy of the client's socket.IO session ID on the App
-            App.mySocketId = IO.socket.socket.sessionid;
-            // console.log(data.message);
+           
+
+            
+            App.mySocketId = IO.socket.id;
+            console.log(App.mySocketId );
         },
 
         /**
@@ -204,8 +207,8 @@ jQuery(function($){
                 console.log('Player clicked "knop" '+$(this).attr('knopnr'));
 
                var data = {
-                   gameId: ($('#inputGameId').val()),
-                   playerName: $('#inputPlayerName').val() || 'anon',
+                   gameId: App.gameId,
+                   playerName: App.Player.myName,
                    knopNr: $(this).attr('knopnr')
                };
               console.log(data)
@@ -221,8 +224,8 @@ jQuery(function($){
                 console.log('Player up "knop" '+$(this).attr('knopnr'));
 
                var data = {
-                   gameId: ($('#inputGameId').val()),
-                   playerName: $('#inputPlayerName').val() || 'anon',
+                   gameId:App.gameId,
+                   playerName: App.Player.myName,
                    knopNr: $(this).attr('knopnr')
                };
               console.log(data)

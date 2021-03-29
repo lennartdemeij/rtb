@@ -35,53 +35,7 @@ exports.initGame = function(sio, socket){
 /**
  * The 'START' button was clicked and 'hostCreateNewGame' event occurred.
  */
-function hostCreateNewGame() {
-    // Create a unique Socket.IO Room
-    var thisGameId = ( Math.random() * 100000 ) | 0;
 
-    // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
-    this.emit('newGameCreated', {gameId: thisGameId, mySocketId: this.id});
-
-    // Join the Room and wait for the players
-    this.join(thisGameId.toString());
-};
-
-/*
- * Two players have joined. Alert the host!
- * @param gameId The game ID / room ID
- */
-function hostPrepareGame(gameId) {
-    var sock = this;
-    var data = {
-        mySocketId : sock.id,
-        gameId : gameId
-    };
-    //console.log("All Players Present. Preparing game...");
-    io.sockets.in(data.gameId).emit('beginNewGame', data);
-}
-
-/*
- * The Countdown has finished, and the game begins!
- * @param gameId The game ID / room ID
- */
-function hostStartGame(gameId) {
-    console.log('Game Started.');
-    sendWord(0,gameId);
-};
-
-/**
- * A player answered correctly. Time for the next word.
- * @param data Sent from the client. Contains the current round and gameId (room)
- */
-function hostNextRound(data) {
-    if(data.round < wordPool.length ){
-        // Send a new set of words back to the host and players.
-        sendWord(data.round, data.gameId);
-    } else {
-        // If the current round exceeds the number of words, send the 'gameOver' event.
-        io.sockets.in(data.gameId).emit('gameOver',data);
-    }
-}
 /* *****************************
    *                           *
    *     PLAYER FUNCTIONS      *
@@ -102,7 +56,7 @@ function playerJoinGame(data) {
     var sock = this;
 
     // Look up the room ID in the Socket.IO manager object.
-    var room = gameSocket.manager.rooms["/" + data.gameId];
+    var room = io.sockets.adapter.rooms.get(data.gameId);
 
     // If the room exists...
     if (room == undefined) {
@@ -121,12 +75,15 @@ function playerJoinGame(data) {
 
         // Emit an event notifying the clients that the player has joined the room.
     io.sockets.in(data.gameId).emit('playerJoinedRoom', data);
-    if (gameSocket.manager.rooms["/" + data.gameId].length > 2) {
+    //if (gameSocket.rooms[data.gameId]?.length > 2) {
+        if(io.sockets.adapter.rooms.get(data.gameId).size>2){
         console.log('begin spel');
         io.sockets.in(data.gameId).emit('startGame', data);
 
 //        $('#gameArea').html($('.knoppen').html());
+
     }
+    console.log('socket',io.sockets.adapter.rooms.get(data.gameId).size)
 
    // } else {
         // Otherwise, send an error message back to the player.
@@ -135,9 +92,12 @@ function playerJoinGame(data) {
 }
 function playerPressedKnop(data) {
     io.sockets.in(data.gameId).emit('playerPressedKnop', data);
+    console.log('press')
 }
 function playerUpKnop(data) {
     io.sockets.in(data.gameId).emit('playerUpKnop', data);
+    console.log('release')
+
 }
 
 /**
