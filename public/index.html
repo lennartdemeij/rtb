@@ -10,51 +10,27 @@
     <link href='https://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
 
     <link href="css/styles.css" rel="stylesheet">
+    <style>
+        .knopcontainer{
+            display:flex;
+        }
+        .knop{
+height:100px;
+background-color:#f00;
+flex:1;
+margin:10px;
+        }
+        .knopactief{
+            background-color:#0f0;
+        }
+    </style>
 </head>
 
 <body>
 
 
     <div id="gameArea">
-        <!-- This is where the templates defined below will be used -->
-    </div>
 
-    <!-- Main Title Screen that appears when the page loads for the first time -->
-    <script id="intro-screen-template" type="text/template">
-
-        <div class="titleWrapper">
-
-            <div class="title">
-                RTB LIVE TEST!
-            </div>
-
-            <div class="buttons">
-
-                <button id="btnCreateGame" class="btn left">CREATE</button>
-                <button id="btnJoinGame" class="btn right">JOIN</button>
-                <div style="clear:both"></div>
-            </div>
-
-        </div>
-
-    </script>
-
-    <!-- This screen appears when a user clicks "CREATE" on the Title Screen -->
-    <script id="create-game-template" type="text/template">
-        <div class="createGameWrapper">
-
-            <div class="info">Open this site on your mobile device:</div>
-            <div id="gameURL" class="infoBig">Error!</div>
-
-            <div class="info">Then click <strong>JOIN</strong> and <br/> enter the following Game ID:</div>
-            <div id="spanNewGameCode" class="gameId">Error!</div>
-
-            <div id="playersWaiting"></div>
-        </div>
-    </script>
-
-    <!-- This scrreen appears when a player clicks "JOIN" on the Title Screen -->
-    <script id="join-game-template" type="text/template">
         <div class="joinGameWrapper">
             <div class="info">
                 <label for="inputPlayerName">Your Name:</label>
@@ -62,7 +38,7 @@
             </div>
 
             <div class="info">
-                <label for="inputGameId">Game ID:</label>
+                <label for="inputGameId">Code:</label>
                 <input id="inputGameId" type="text"/>
             </div>
 
@@ -71,22 +47,18 @@
                 <div id="playerWaitingMessage"></div>
             </div>
         </div>
-    </script>
+    </div>
 
-    <!-- This is the 'Host' screen. It displays the word for each player to match -->
-    <script id="host-game-template" type="text/template">
-        <div id="wordArea">
-            <div id="hostWord">5</div>
-        </div>
-        <div id="playerScores">
-            <div id="player1Score" class="playerScore">
-                <span class="score">0</span><span class="playerName">Player 1</span>
-            </div>
-            <div id="player2Score" class="playerScore">
-                <span class="playerName">Player 2</span><span class="score">0</span>
-            </div>
-        </div>
-    </script>
+
+
+<div style='display:none;' class=knoppen>
+    <div class='knopcontainer'>
+    <div class='knop knop1' knopnr=1></div>
+    <div class='knop knop2' knopnr=2></div>
+    <div class='knop knop3' knopnr=3></div>
+</div>
+</div>
+
 
     <!-- JavaScript Libraries -->
 
