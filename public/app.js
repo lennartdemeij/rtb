@@ -444,7 +444,7 @@ jQuery(function($){
                             App.game1finished = true;
                             IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
                         }
-                     }, 2000);
+                     }, 200);
                 }
             },
             
