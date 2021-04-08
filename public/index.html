@@ -23,6 +23,87 @@ margin:10px;
         .knopactief{
             background-color:#0f0;
         }
+        .vraagAfbeelding{
+            height:400px;
+            background-size:cover;
+            width:600px;
+        }
+
+
+
+        .point {
+    width: 10vw;
+    height: 10vw;
+    background-color: #fff;
+    position: absolute;
+    color:#000;font-size:40px;
+    text-align:center;
+    line-height:100vh;
+}
+
+.point3 {
+    left: 30vw;
+    top: 50vh;
+}
+
+.point2 {
+    left: 70vw;
+    top: 20vh;
+}
+
+.point1 {
+    left: 50vw;
+    top: 70vh;
+}
+
+.vertiPoint {
+    top: 0px;
+    height: 100vh;
+}.horiPoint{left:0px;
+    line-height: 10vw;
+width:100vw;}
+.targetPoint{
+   background-color:#00000000
+}
+.maze div {
+ flex-basis:10%;}
+.maze{display:flex;flex-wrap:wrap;height:300px;width:300px;position:relative;}
+.maze .muur{
+    background-color:#000;
+}
+.maze .open{
+    background-color:#ffffff00;
+}
+.mazeplayer{
+    position:absolute;
+    z-index:999;
+    width:30px;
+    height:30px;
+    border-radius: 50%;
+    background-color:#f00;
+
+}
+.mazeknop{
+    margin:10px;
+height:40px;
+width:40px;
+box-shadow:0px 3px 8px #000000bb;
+float:left;
+background-color:#00f;
+cursor:pointer;
+}
+
+.groteKnop{
+    transition: 0.2s;
+    margin:10px;
+height:100px;
+width:100px;
+box-shadow:0px 3px 8px #000000bb;
+float:left;
+background-color:#00f;
+cursor:pointer;
+}
+
     </style>
 </head>
 
@@ -32,6 +113,7 @@ margin:10px;
     <div id="gameArea">
 
         <div class="joinGameWrapper">
+            <div class='codeInput'>
             <div class="info">
                 <label for="inputPlayerName">Your Name:</label>
                 <input id="inputPlayerName" type="text" />
@@ -41,9 +123,10 @@ margin:10px;
                 <label for="inputGameId">Code:</label>
                 <input id="inputGameId" type="text"/>
             </div>
-
+        </div>
             <div class="info buttons">
-                <button id="btnStart" class="btn">Start</button>
+                <button id="btnStart" class="btn">Join</button>
+                <button id="startButton" class="btn" style='display:none;'>Start Game</button>
                 <div id="playerWaitingMessage"></div>
             </div>
         </div>
@@ -51,14 +134,49 @@ margin:10px;
 
 
 
-<div style='display:none;' class=knoppen>
-    <div class='knopcontainer'>
-    <div class='knop knop1' knopnr=1></div>
-    <div class='knop knop2' knopnr=2></div>
-    <div class='knop knop3' knopnr=3></div>
-</div>
-</div>
+    <div style='display:none;' class=game1>
+        <div class='knopContainer'>
+      
+    </div>
+    </div>
 
+    <div style='display:none;' class=game2>
+        <div class='game2container'>
+       <div class='point point1' pointnr=1>
+       </div>
+       <div class='point point2' pointnr=2>
+               </div>  
+               <div class='point point3' pointnr=3>
+                       </div>
+    </div>
+    </div>
+    <div style='display:none;' class=game3>
+        <div class='game3container'>
+            <div class='maze'>
+
+            </div>
+            <div class='mazeplayer'></div>
+       
+    </div>
+    </div>
+
+    <div style='display:none;' class=game4>
+        <div class='groteKnopContainer'>
+      <div class='groteKnop'></div>
+    </div>
+    </div>
+
+
+<div style='display:none;' class=vraagContainer>
+    <div class='vraagAfbeelding'>
+        
+    </div>
+    <div class='vraagTekst'></div>
+    <div class='antwoordContainer'>
+    <input type=text id=vraagAntwoord>
+    <div class='antwoordDoorvoeren'>Go</div>
+</div>
+</div>
 
     <!-- JavaScript Libraries -->
 
