@@ -60,7 +60,7 @@ jQuery(function($){
                     }
                     
                     $("#gameArea .groteKnop").css("opacity", App.game4opacity);
-                }, 2000);
+                }, 200);
             }
             //alert(App.playerNumber,App.mySocketId);
 //game1
@@ -444,7 +444,7 @@ jQuery(function($){
                             App.game1finished = true;
                             IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
                         }
-                     }, 200);
+                     }, 2000);
                 }
             },
             
