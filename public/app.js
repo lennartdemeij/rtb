@@ -172,6 +172,7 @@ jQuery(function($){
         game2targetNr:1,
         game1finished: false,
         game2finished: false,
+        game4finished: false,
         numberOfPlayers: 0,
         targetPlayer: 0,
         mazePlayer: 0,
@@ -364,7 +365,8 @@ jQuery(function($){
                     }
               
                 
-                    if ( App.game4final>10 ) {
+                    if (App.game4final > 10 && !App.game4finished) {
+                        App.game4finished = true;
                         data.uitkomst= "goed";
 
                         IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
