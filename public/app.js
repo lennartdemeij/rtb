@@ -155,6 +155,9 @@ jQuery(function($){
     };
 
     var App = {
+
+        huidigeMuziek: '',
+        huidigeVideo:'',
         game4final:0,
         game4opacity:0,
         maze: [
@@ -218,11 +221,25 @@ jQuery(function($){
         startVraag: function () {
             console.log(App.vragenJSON[App.vraagnummer]);
             if (App.vragenJSON[App.vraagnummer].Soort == 'game') {
-                $('#gameArea').html($('.'+App.vragenJSON[App.vraagnummer].Vraag).html());
+                $('#gameArea').html($('.' + App.vragenJSON[App.vraagnummer].Vraag).html());
+            
             } else {
+
                 $('.vraagTekst').html(App.vragenJSON[App.vraagnummer].Vraag);
                 $('.vraagAfbeelding').css('background-image', 'url(https://remoteteambuilding.nl/achter/' + App.vragenJSON[App.vraagnummer].Achtergrond + ')');
                 $('#gameArea').html($('.vraagContainer').html());
+                if (App.vragenJSON[App.vraagnummer].Soort == 'video') {
+                    $('#gameArea .vraagAfbeelding').html($('.videoContainer').html());
+                    $(".videoKnop iframe").attr('src', 'https://player.vimeo.com/video/' + App.vragenJSON[App.vraagnummer].File);
+
+                }
+                if (App.vragenJSON[App.vraagnummer].Soort == 'muziek') {
+                
+                    $('#gameArea .vraagAfbeelding').html($('.muziekContainer').html());
+                    $("#muziek source").attr('src', 'https://remoteteambuilding.nl/uploads/' + App.vragenJSON[App.vraagnummer].File + ".mp3");
+                    $("#muziek")[0].load();
+
+                }
             }
 
         },
@@ -239,6 +256,61 @@ jQuery(function($){
             
                      data: {code:$('#inputGameId').val()},
                     url: 'https://remoteteambuilding.nl/registreerspeler.php',
+                     success: function (dat) {
+                         if (dat != "bestaatniet") {
+                             var wat=                          dat.split(",");
+                             App.sessieId = wat[1];
+                             if (wat[3] == 'aangemaakt') {
+                                 $('#playerWaitingMessage').html('1 Speler aanwezig. Druk op start als alle spelers er zijn.');
+                                 var data = {
+                                     gameId: ($('#inputGameId').val()),
+                                     playerName: $('#inputPlayerName').val() || 'NoName'
+                                 };
+                               
+                                 console.log(data)
+                                 IO.socket.emit('playerJoinGame', data);
+                                 App.gameId = data.gameId;
+                                 //App.mySocketId = data.mySocketId;
+                                 App.myRole = 'Player';
+                                 App.Player.myName = data.playerName;
+                             } else {
+                                $('#playerWaitingMessage').html('Dit spel is al begonnen.');
+                                $('#btnStart').show();
+                                $('.codeInput').show();
+    
+                                 console.log(wat)
+                             }
+                         } else {
+                            $('#playerWaitingMessage').html('Deze code bestaat niet');
+                            $('#btnStart').show();
+                            $('.codeInput').show();
+
+                             console.log('bestaat niet...')
+                         }
+                       
+                        
+                        
+                        //   console.log(App.vragenJSON)
+                    }, error: function (er) {
+                        console.log("wat",er)
+                    }
+                 })
+                 
+
+              
+            },
+            onPlayerStartClick: function () {
+                console.log('Player clicked "Start"');
+                 $('#startButton').hide();
+                 var data = {
+                    gameId: ($('#inputGameId').val()),
+                    playerName: $('#inputPlayerName').val() || 'NoName'
+                 };
+                 $.ajax({
+                    method: "POST",
+            
+                     data: {code:App.sessieId},
+                    url: 'https://remoteteambuilding.nl/startsessie.php',
                      success: function (dat) {
                          if (dat != "bestaatniet") {
                              console.log('data:', dat.split(","));
@@ -269,17 +341,7 @@ jQuery(function($){
                         console.log("wat",er)
                     }
                  })
-                 
-
-              
-            },
-            onPlayerStartClick: function () {
-                console.log('Player clicked "Start"');
-                 $('#startButton').hide();
-                 var data = {
-                    gameId: ($('#inputGameId').val()),
-                    playerName: $('#inputPlayerName').val() || 'NoName'
-                };
+                
                              IO.socket.emit('playerPressedStart', data);
                           
                  
@@ -471,5 +533,18 @@ jQuery(function($){
 
     IO.init();
     App.init();
+
+
+    ////client functions
+    $("body").on("click", ".muziek", function () {
+        var sounds = document.getElementsByTagName("audio");
+        for (var i = 0; i < sounds.length; i++) {
+          sounds[i].pause();
+          sounds[i].currentTime = 0;
+        }
+    
+        $("#muziek").trigger($("#muziek").hasClass('staataan') ? 'pause' : 'play').toggleClass('staataan');
+    //    $("#muziek")[0].play();
+      });
 
 }($));
