@@ -61,7 +61,7 @@ jQuery(function($){
                     }
                     
                     $("#gameArea .groteKnop").css("opacity", App.game4opacity);
-                }, 20000);
+                }, 1000);
             }
             //alert(App.playerNumber,App.mySocketId);
             //game1
