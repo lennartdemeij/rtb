@@ -19,6 +19,8 @@ jQuery(function($){
             IO.socket.on('someonePressedAntwoordDoorvoeren', IO.someonePressedAntwoordDoorvoeren);
             IO.socket.on('playerPressedAntwoordDoorvoeren', IO.playerPressedAntwoordDoorvoeren);
             IO.socket.on('playerPressedStart', IO.playerPressedStart);
+            IO.socket.on('someonePressedHint', IO.someonePressedHint);
+            IO.socket.on('someonePressedSkip', IO.someonePressedSkip);
             IO.socket.on('playerUpKnop', IO.playerUpKnop);
             IO.socket.on('startGame', IO.startGame);
             IO.socket.on('klikGameClicked', IO.klikGameClicked);
@@ -105,6 +107,7 @@ jQuery(function($){
             } else {
                 App.game4opacity = 0;
             }
+            $('.extraknoppen').show();
             App.startVraag();
           //  $('#gameArea').html($('.game1').html());
           },
@@ -145,6 +148,14 @@ jQuery(function($){
         someonePressedAntwoordDoorvoeren: function (data) {
             App.Player.someonePressedAntwoordDoorvoeren(data);
            console.log('someonePressedAntwoordDoorvoeren',data);
+        },
+        someonePressedHint: function (data) {
+            App.Player.someonePressedHint(data);
+           console.log('someonePressedHint',data);
+        },
+        someonePressedSkip: function (data) {
+            App.Player.someonePressedSkip(data);
+           console.log('someonePressedSkip',data);
         },
         playerUpKnop : function(data) {
             App.Player.someoneUpKnop(data);
@@ -212,6 +223,8 @@ jQuery(function($){
             App.$doc.on('click', '#btnStart',App.Player.onPlayerJoinClick);
             App.$doc.on('click', '.targetPoint',App.Player.onTargetClick);
             App.$doc.on('click', '#startButton',App.Player.onPlayerStartClick);
+            App.$doc.on('click', '#hintButton',App.Player.onPlayerHintClick);
+            App.$doc.on('click', '#skipButton',App.Player.onPlayerSkipClick);
             App.$doc.on('mousedown touchstart', '.knop',App.Player.onKnopClick);
             App.$doc.on('mouseup touchend', '.knop',App.Player.onKnopUp);
             App.$doc.on('click', '.antwoordDoorvoeren',App.Player.onAntwoordDoorvoeren);
@@ -351,6 +364,22 @@ jQuery(function($){
 
               
             },
+            onPlayerHintClick: function () {
+                console.log('Player clicked "hint"');
+                 var data = {
+                    gameId: (App.gameId),
+                 };
+              
+               IO.socket.emit('playerPressedHint', data);
+            },
+            onPlayerSkipClick: function () {
+                console.log('Player clicked "skip"');
+                 var data = {
+                    gameId: (App.gameId),
+                 };
+              
+               IO.socket.emit('playerPressedSkip', data);
+                },
             onAntwoordDoorvoeren: function () {
                 console.log('Player clicked "antwoordoorvoeren"');
                 if ($('#gameArea #vraagAntwoord').val()?.length > 0) {
@@ -515,7 +544,17 @@ jQuery(function($){
                      }, 2000);
                 }
             },
-            
+            someonePressedHint: function (data) {
+                alertData(App.vragenJSON[App.vraagnummer].Hint);
+            },
+            someonePressedSkip: function (data) {
+                alertData(App.vragenJSON[App.vraagnummer].Antwoord.split("|")[0]);
+
+                App.vraagnummer++;
+                App.startVraag();
+
+            },
+
             someoneUpKnop: function (data) {
                 
                 $('.knop' + data.knopNr).removeClass('knopactief');
