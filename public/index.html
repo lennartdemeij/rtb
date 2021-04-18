@@ -33,7 +33,7 @@ margin:10px;
 
         .point {
     width: 10vw;
-    height: 10vw;
+    height: 10vh;
     background-color: #fff;
     position: absolute;
     color:#000;font-size:40px;
@@ -103,6 +103,25 @@ float:left;
 background-color:#00f;
 cursor:pointer;
 }
+.overlay{
+    position:fixed;
+    top:0px;
+    left:0px;
+    right:0px;
+    bottom:0px;
+    height:100vh;
+    width:100vw;
+    background:#000000aa;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.popup{
+    background:#bbb;
+    padding:30px;
+
+}
+
 
     </style>
 </head>
@@ -141,7 +160,9 @@ cursor:pointer;
     </div>
 
     <div style='display:none;' class=game2>
-        <div class='game2container'>
+        <div class='game2container' style='background-size: 10vw 10vh;
+        background-image: linear-gradient(to right, grey 1px, transparent 1px), linear-gradient(to bottom, grey 1px, transparent 1px);    width: 100vw;
+    height: 100vh;'>
        <div class='point point1' pointnr=1>
        </div>
        <div class='point point2' pointnr=2>
@@ -190,6 +211,8 @@ cursor:pointer;
 <audio class="audio" id="muziek">
     <source src="" type="audio/mpeg">
   </audio>
+
+  <div class='overlay' style='display:none;'><div class='popup'></div></div>
 
     <!-- JavaScript Libraries -->
 

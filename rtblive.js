@@ -48,8 +48,8 @@ function newPlayerPosition(data) {
     console.log('newPlayerPosition')
 }
 function playerPressedAntwoordDoorvoeren(data) {
-    io.sockets.in(data.gameId).emit('playerPressedAntwoordDoorvoeren', data);
-    console.log('playerPressedAntwoordDoorvoeren')
+    io.sockets.in(data.gameId).emit('someonePressedAntwoordDoorvoeren', data);
+    console.log('someonePressedAntwoordDoorvoeren')
 }
 function playerPressedStart(data) {
   //  io.sockets.in(data.gameId).emit('playerPressedKnop', data);

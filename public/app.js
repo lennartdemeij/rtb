@@ -16,6 +16,7 @@ jQuery(function($){
             IO.socket.on('playerPressedKnop', IO.playerPressedKnop);
             IO.socket.on('playerPressedTarget', IO.playerPressedTarget);
             IO.socket.on('newPlayerPosition', IO.newPlayerPosition);
+            IO.socket.on('someonePressedAntwoordDoorvoeren', IO.someonePressedAntwoordDoorvoeren);
             IO.socket.on('playerPressedAntwoordDoorvoeren', IO.playerPressedAntwoordDoorvoeren);
             IO.socket.on('playerPressedStart', IO.playerPressedStart);
             IO.socket.on('playerUpKnop', IO.playerUpKnop);
@@ -51,7 +52,7 @@ jQuery(function($){
             App.playerNumber = App.players.indexOf(App.mySocketId);
             if (App.playerNumber > 0) {
                 var k = setInterval(function () {
-                    console.log(App.game4opacity);
+                  //  console.log(App.game4opacity);
                     if (App.game4opacity > 0) {
                         App.game4opacity = App.game4opacity - 0.2;
                     }
@@ -60,10 +61,10 @@ jQuery(function($){
                     }
                     
                     $("#gameArea .groteKnop").css("opacity", App.game4opacity);
-                }, 200);
+                }, 20000);
             }
             //alert(App.playerNumber,App.mySocketId);
-//game1
+            //game1
             $(".knopContainer").html("");
             for (var i = 0; i < App.numberOfPlayers; i++){
                 $(".knopContainer").append("<div class='knop knop"+(i+1)+"' knopnr="+(i+1)+"></div>");
@@ -79,7 +80,7 @@ jQuery(function($){
                 } else {
                 $('.point').addClass('targetPoint');
             }
-//game3
+            //game3
             for (var x = 0; x < 10; x++){
                 for (var y = 0; y < 10; y++) {
                     $('.game3container .maze').append("<div class='"+(App.maze[x][y]==1?'muur':'open')+"'></div>");
@@ -141,9 +142,9 @@ jQuery(function($){
            // App.Player.playerPressedStart(data);
             console.log('playerPressedStart',data);
         },
-        playerPressedAntwoordDoorvoeren: function (data) {
-            App.Player.playerPressedAntwoordDoorvoeren(data);
-           console.log('playerPressedAntwoordDoorvoeren',data);
+        someonePressedAntwoordDoorvoeren: function (data) {
+            App.Player.someonePressedAntwoordDoorvoeren(data);
+           console.log('someonePressedAntwoordDoorvoeren',data);
         },
         playerUpKnop : function(data) {
             App.Player.someoneUpKnop(data);
@@ -306,6 +307,9 @@ jQuery(function($){
                     gameId: ($('#inputGameId').val()),
                     playerName: $('#inputPlayerName').val() || 'NoName'
                  };
+                 App.gameId = data.gameId;
+                 App.myRole = 'Player';
+                 App.Player.myName = data.playerName;
                  $.ajax({
                     method: "POST",
             
@@ -315,17 +319,15 @@ jQuery(function($){
                          if (dat != "bestaatniet") {
                              console.log('data:', dat.split(","));
                              $('#playerWaitingMessage').html('1 Speler aanwezig. Druk op start als alle spelers er zijn.');
-                             var data = {
-                                 gameId: ($('#inputGameId').val()),
-                                 playerName: $('#inputPlayerName').val() || 'NoName'
-                             };
+                              var data = {
+                                  gameId: ($('#inputGameId').val()),
+                                  playerName: $('#inputPlayerName').val() || 'NoName'
+                              };
                                
                             console.log(data)
-                             IO.socket.emit('playerJoinGame', data);
-                             App.gameId = data.gameId;
+                             //IO.socket.emit('playerJoinGame', data);
                              //App.mySocketId = data.mySocketId;
-                             App.myRole = 'Player';
-                             App.Player.myName = data.playerName;
+                          
                          } else {
                             $('#playerWaitingMessage').html('Deze code bestaat niet');
                             $('#btnStart').show();
@@ -421,6 +423,8 @@ jQuery(function($){
 
             onGroteClick: function () {
                 if ($(this).css('opacity') > 0.4) {
+                    $(this).css('margin-left', Math.random() * 70 + "vw");
+                    $(this).css('margin-top', Math.random() * 70 + "vh");
                     var data = {
                         gameId: App.gameId,
                         klik: App.playerNumber
@@ -516,13 +520,13 @@ jQuery(function($){
                 
                 $('.knop' + data.knopNr).removeClass('knopactief');
             },
-            playerPressedAntwoordDoorvoeren: function (data) {
+            someonePressedAntwoordDoorvoeren: function (data) {
                 if (data.uitkomst == 'goed') {
                     App.vraagnummer++;
                     App.startVraag();
 
                 }
-                alert(data.uitkomst);
+                alertData(data.uitkomst);
 
                 console.log(data)
            //     IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
@@ -548,3 +552,7 @@ jQuery(function($){
       });
 
 }($));
+function alertData(uitkomst, uitleg=""){
+    $('.overlay').show();
+    $('.overlay .popup').html("<h1>"+uitkomst+"</h1><p></p><div onclick='$(\".overlay\").hide();'>sluiten</div>");
+}
