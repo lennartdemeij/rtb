@@ -24,6 +24,8 @@ jQuery(function($){
             IO.socket.on('playerUpKnop', IO.playerUpKnop);
             IO.socket.on('startGame', IO.startGame);
             IO.socket.on('klikGameClicked', IO.klikGameClicked);
+
+            IO.socket.on('countdown', IO.countdown);
         },
 
         onConnected: function () {
@@ -114,6 +116,9 @@ jQuery(function($){
           playerPressedKnop : function(data) {
             App.Player.someonePressedKnop(data);
             console.log('playerPressedKnop',data);
+        },
+        countdown: function (data) {
+            console.log('tijd: ' + data);
         },
         klikGameClicked: function (data) {
             if (data.klik == App.playerNumber - 1) {
@@ -284,6 +289,7 @@ jQuery(function($){
                                  console.log(data)
                                  IO.socket.emit('playerJoinGame', data);
                                  App.gameId = data.gameId;
+                                 App.totalTime = wat[7];
                                  //App.mySocketId = data.mySocketId;
                                  App.myRole = 'Player';
                                  App.Player.myName = data.playerName;
@@ -318,7 +324,8 @@ jQuery(function($){
                  $('#startButton').hide();
                  var data = {
                     gameId: ($('#inputGameId').val()),
-                    playerName: $('#inputPlayerName').val() || 'NoName'
+                     playerName: $('#inputPlayerName').val() || 'NoName',
+                    totalTime:App.totalTime
                  };
                  App.gameId = data.gameId;
                  App.myRole = 'Player';
@@ -548,6 +555,7 @@ jQuery(function($){
                 alertData(App.vragenJSON[App.vraagnummer].Hint);
             },
             someonePressedSkip: function (data) {
+                
                 alertData(App.vragenJSON[App.vraagnummer].Antwoord.split("|")[0]);
 
                 App.vraagnummer++;

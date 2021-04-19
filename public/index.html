@@ -4,7 +4,8 @@
     <meta charset="utf-8"/>
 
     <!-- Ensure that everything scales appropriately on a mobile device -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
     <!-- Let's borrow a cool looking Font from Google -->
     <link href='https://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
@@ -60,7 +61,7 @@ margin:10px;
     top: 0px;
     height: 100vh;
 }.horiPoint{left:0px;
-    line-height: 10vw;
+    line-height: 10vh;
 width:100vw;}
 .targetPoint{
    background-color:#00000000
@@ -241,6 +242,8 @@ cursor:pointer;
     <!-- If Socket.IO is used with Express, then the /socket.io/ path will
         serve the proper Socket.IO javascript files used by the browser -->
     <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="libs/box-2d.js"></script>
+<script type="text/javascript" src="libs/gravity.js"></script>
 
     <!-- app.js is where all the client-side Anagrammatix game logic -->
     <script src="app.js"></script>
