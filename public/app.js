@@ -1,6 +1,13 @@
 
 jQuery(function($){    
     'use strict';
+    var hintKosten = 10;
+    var miniKosten = 3;
+    var foutKosten = 20;
+    var skipKosten = 100;
+    var goedOpbrengst = 150;
+    var gameOpbrengst = 200;
+
     var IO = {
 
         init: function () {
@@ -17,15 +24,16 @@ jQuery(function($){
             IO.socket.on('playerPressedTarget', IO.playerPressedTarget);
             IO.socket.on('newPlayerPosition', IO.newPlayerPosition);
             IO.socket.on('someonePressedAntwoordDoorvoeren', IO.someonePressedAntwoordDoorvoeren);
-            IO.socket.on('playerPressedAntwoordDoorvoeren', IO.playerPressedAntwoordDoorvoeren);
             IO.socket.on('playerPressedStart', IO.playerPressedStart);
             IO.socket.on('someonePressedHint', IO.someonePressedHint);
             IO.socket.on('someonePressedSkip', IO.someonePressedSkip);
+            IO.socket.on('someoneGotItWrong', IO.someoneGotItWrong);
             IO.socket.on('playerUpKnop', IO.playerUpKnop);
             IO.socket.on('startGame', IO.startGame);
             IO.socket.on('klikGameClicked', IO.klikGameClicked);
 
             IO.socket.on('countdown', IO.countdown);
+            IO.socket.on('finished', IO.finished);
         },
 
         onConnected: function () {
@@ -82,8 +90,9 @@ jQuery(function($){
                     $('.point').each(function () { $(this).html($(this).attr('pointnr'));});
                 }
                 } else {
-                $('.point').addClass('targetPoint');
-            }
+                    $('.point').addClass('targetPoint');
+                    $('.game2container').addClass('targetContainer');
+                }
             //game3
             for (var x = 0; x < 10; x++){
                 for (var y = 0; y < 10; y++) {
@@ -110,6 +119,7 @@ jQuery(function($){
                 App.game4opacity = 0;
             }
             $('.extraknoppen').show();
+            $('.tijdScore').show();
             App.startVraag();
           //  $('#gameArea').html($('.game1').html());
           },
@@ -119,6 +129,11 @@ jQuery(function($){
         },
         countdown: function (data) {
             console.log('tijd: ' + data);
+            $('.tijdScore .tijd').html(data);
+            $('.tijdScore .score').html(App.score);
+        },
+        finished: function (data) {
+            confetti();
         },
         klikGameClicked: function (data) {
             if (data.klik == App.playerNumber - 1) {
@@ -162,6 +177,11 @@ jQuery(function($){
             App.Player.someonePressedSkip(data);
            console.log('someonePressedSkip',data);
         },
+        someoneGotItWrong: function (data) {
+            console.log('someoneGotItWrong',data);
+
+            App.Player.someoneGotItWrong(data);
+        },
         playerUpKnop : function(data) {
             App.Player.someoneUpKnop(data);
             console.log('someoneUpKnop',data);
@@ -172,7 +192,7 @@ jQuery(function($){
     };
 
     var App = {
-
+        score:0,
         huidigeMuziek: '',
         huidigeVideo:'',
         game4final:0,
@@ -235,6 +255,8 @@ jQuery(function($){
             App.$doc.on('click', '.antwoordDoorvoeren',App.Player.onAntwoordDoorvoeren);
             App.$doc.on('click', '.mazeknop',App.Player.onMazeClick);
             App.$doc.on('click', '.groteKnop',App.Player.onGroteClick);
+            App.$doc.on('click', '.groteKnopContainer',App.Player.onGroteContainerClick);
+            App.$doc.on('click', '.targetContainer',App.Player.onMisClick);
 
         },
         startVraag: function () {
@@ -447,6 +469,11 @@ jQuery(function($){
                     }
                 } else {
                     //muur!
+                    var data = {
+                        gameId: App.gameId,
+                    }
+                    IO.socket.emit('playerGotItWrong', data);
+
                     console.log('muur!');
                 }
                 
@@ -490,6 +517,14 @@ jQuery(function($){
             
 
             },
+            onGroteContainerClick: function () {
+                var data = {
+                    gameId: App.gameId,
+                }
+                console.log('wrond');
+                IO.socket.emit('playerGotItWrong', data);
+
+            },
             onTargetClick: function () {
                 console.log('Player clicked "target" ' + $(this).attr('pointnr'));
                 if ($(this).attr('pointnr') == App.game2targetNr) {
@@ -505,6 +540,13 @@ jQuery(function($){
 
             
 
+            },
+            onMisClick: function () {
+                    var data = {
+                        gameId: App.gameId,
+                    }
+                    IO.socket.emit('playerGotItWrong', data);
+    
             },
             onKnopClick: function () {
                 console.log('Player clicked "knop" '+$(this).attr('knopnr'));
@@ -551,11 +593,15 @@ jQuery(function($){
                      }, 2000);
                 }
             },
+            someoneGotItWrong: function (data) {
+                App.score -= miniKosten;
+            },
             someonePressedHint: function (data) {
+                App.score -= hintKosten;
                 alertData(App.vragenJSON[App.vraagnummer].Hint);
             },
             someonePressedSkip: function (data) {
-                
+                App.score -= skipKosten;
                 alertData(App.vragenJSON[App.vraagnummer].Antwoord.split("|")[0]);
 
                 App.vraagnummer++;
@@ -569,10 +615,19 @@ jQuery(function($){
             },
             someonePressedAntwoordDoorvoeren: function (data) {
                 if (data.uitkomst == 'goed') {
+                    if (App.vragenJSON[App.vraagnummer].Soort == 'game') {
+                        App.score += gameOpbrengst;
+                    } else {
+                        App.score += goedOpbrengst;
+                    }
                     App.vraagnummer++;
                     App.startVraag();
 
+                } else {
+                    App.score -= foutKosten;
+
                 }
+                
                 alertData(data.uitkomst);
 
                 console.log(data)

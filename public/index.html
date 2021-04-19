@@ -127,6 +127,11 @@ cursor:pointer;
     bottom:20px;
     right: 20px;
 }
+.tijdScore{
+    top: 0px;
+    right: 0px;
+    position: absolute;
+}
 
 
     </style>
@@ -156,16 +161,23 @@ cursor:pointer;
             </div>
         </div>
     </div>
-<div class='extraknoppen' style='display:none;'>
-    <button id="hintButton" class="btn" >HINT</button>
-<BR>
-    <button id="skipButton" class="btn">OVERSLAAN</button>
-
-</div>
+    <div class='extraknoppen' style='display:none;'>
+        <button id="hintButton" class="btn" >HINT</button>
+    <BR>
+        <button id="skipButton" class="btn">OVERSLAAN</button>
+    
+    </div>
+    <div class='tijdScore' style='display:none;'>
+        <div class=tijd></div>
+    <BR>
+        <div class=score></div>
+    
+    </div>
 
 
     <div style='display:none;' class=game1>
-        <div class='knopContainer'>
+        <div class='knopContainer' style=' width: 100vw;
+        height: 100vh;'>
       
     </div>
     </div>
@@ -183,7 +195,8 @@ cursor:pointer;
     </div>
     </div>
     <div style='display:none;' class=game3>
-        <div class='game3container'>
+        <div class='game3container' style=' width: 100vw;
+        height: 100vh;'>
             <div class='maze'>
 
             </div>
@@ -193,7 +206,8 @@ cursor:pointer;
     </div>
 
     <div style='display:none;' class=game4>
-        <div class='groteKnopContainer'>
+        <div class='groteKnopContainer' style=' width: 100vw;
+        height: 100vh;'>
       <div class='groteKnop'></div>
     </div>
     </div>
@@ -219,6 +233,7 @@ cursor:pointer;
     <div class='antwoordDoorvoeren'>Go</div>
 </div>
 </div>
+
 <audio class="audio" id="muziek">
     <source src="" type="audio/mpeg">
   </audio>
@@ -242,8 +257,7 @@ cursor:pointer;
     <!-- If Socket.IO is used with Express, then the /socket.io/ path will
         serve the proper Socket.IO javascript files used by the browser -->
     <script src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="libs/box-2d.js"></script>
-<script type="text/javascript" src="libs/gravity.js"></script>
+    <script type="text/javascript" src="libs/confetti.js"></script>
 
     <!-- app.js is where all the client-side Anagrammatix game logic -->
     <script src="app.js"></script>
