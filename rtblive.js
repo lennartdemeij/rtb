@@ -1,5 +1,7 @@
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var io;
 var gameSocket;
+
 exports.initGame = function (sio, socket) {
     io = sio;
     gameSocket = socket;
@@ -13,7 +15,9 @@ exports.initGame = function (sio, socket) {
     gameSocket.on('playerPressedHint', playerPressedHint);
     gameSocket.on('playerPressedSkip', playerPressedSkip);
     gameSocket.on('playerUpKnop', playerUpKnop);
+    gameSocket.on('playerGotItWrong', playerGotItWrong);
     gameSocket.on('klikGame', klikGame);
+    gameSocket.on('stukjeMoved', stukjeMoved);
 };
 function playerJoinGame(data) {
     console.log('Player ' + data.playerName + 'attempting to join game: ' + data.gameId );
@@ -53,11 +57,48 @@ function playerPressedAntwoordDoorvoeren(data) {
     io.sockets.in(data.gameId).emit('someonePressedAntwoordDoorvoeren', data);
     console.log('someonePressedAntwoordDoorvoeren')
 }
+function stukjeMoved(data) {
+    io.sockets.in(data.gameId).emit('someoneMovedStukje', data);
+    console.log('someoneMovedStukje')
+}
+
 function playerPressedStart(data) {
     //  io.sockets.in(data.gameId).emit('playerPressedKnop', data);
       console.log('press')
       data.targetPlayer=Math.floor(Math.random() * io.sockets.adapter.rooms.get(data.gameId).size);
-      io.sockets.in(data.gameId).emit('startGame', data);
+    io.sockets.in(data.gameId).emit('startGame', data);
+    var counter = 0;
+    var seconds = data.totalTime;
+    var remaining;
+    var interval = setInterval(function () {
+        remaining = seconds - Math.ceil(counter / 1000);
+        io.sockets.in(data.gameId).emit('countdown', remaining);
+        if (counter >= data.totalTime*1000) {
+            io.sockets.in(data.gameId).emit('finished');
+        } else {
+            counter += 1000;
+        }
+        if (counter % 20000 == 0) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('post', 'https://remoteteambuilding.nl/tussenscore.php');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send(encodeURIComponent('code') + "=" + encodeURIComponent(data.sessieId));
+            xhr.onload = function () {
+                io.sockets.in(data.gameId).emit('tussenscores', xhr.responseText);
+            }
+        }
+        if (!io.sockets.adapter.rooms.get(data.gameId)){
+            clearInterval(interval);
+
+        }
+        console.log('timer '+remaining);
+    }, 1000);
+
+
+}
+function playerGotItWrong(data) {
+    console.log('wrongpress')
+    io.sockets.in(data.gameId).emit('someoneGotItWrong', data);
 }
 function playerPressedHint(data) {
     console.log('press')
