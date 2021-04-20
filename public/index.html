@@ -132,6 +132,16 @@ cursor:pointer;
     right: 0px;
     position: absolute;
 }
+.game6container{
+    position:relative;
+}
+.stukje{
+    position:absolute;
+    width:100px;
+    transition:0.4s;
+    height:100px;
+background-color:#ccc;
+}
 
 
     </style>
@@ -162,6 +172,12 @@ cursor:pointer;
         </div>
     </div>
     <div class='extraknoppen' style='display:none;'>
+        <div class='tussenscores'>
+            <div class='tussenscorestitel'>
+            </div>
+            <div class='tussenscorescontent'>
+            </div>
+        </div>
         <button id="hintButton" class="btn" >HINT</button>
     <BR>
         <button id="skipButton" class="btn">OVERSLAAN</button>
@@ -202,8 +218,27 @@ cursor:pointer;
             </div>
             <div class='mazeplayer'></div>
        
+     </div>
     </div>
+    <div style='display:none;' class=game5>
+        <div class='game5container' style=' width: 100vw;
+        height: 100vh;'>
+            <div class='maze'>
+
+            </div>
+            <div class='mazeplayer'></div>
+       
+     </div>
     </div>
+
+    <div style='display:none;' class=game6>
+        <div class='game6container' style=' width: 100vw;
+        height: 100vh;'>
+          
+       
+     </div>
+    </div>
+
 
     <div style='display:none;' class=game4>
         <div class='groteKnopContainer' style=' width: 100vw;
