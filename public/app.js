@@ -641,7 +641,7 @@ jQuery(function($){
                         console.log('muur!');
                     }
                 
-                } else {
+                } else  if (App.vragenJSON[App.vraagnummer].Vraag == "game3") {
                     console.log('Player clicked "maze" ' + $(this).attr('richting'));
                     if (App.maze[App.game3position[1] - ($(this).attr('richting') == 'up' ? 1 : 0) + ($(this).attr('richting') == 'down' ? 1 : 0)][App.game3position[0] - ($(this).attr('richting') == 'left' ? 1 : 0) + ($(this).attr('richting') == 'right' ? 1 : 0)] == 0) {
                         //kan bewegen
