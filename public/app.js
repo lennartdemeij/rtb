@@ -28,6 +28,7 @@ jQuery(function($){
             IO.socket.on('playerPressedStart', IO.playerPressedStart);
             IO.socket.on('someonePressedHint', IO.someonePressedHint);
             IO.socket.on('someonePressedSkip', IO.someonePressedSkip);
+            IO.socket.on('someonePressedStart', IO.someonePressedStart);
             IO.socket.on('someoneGotItWrong', IO.someoneGotItWrong);
             IO.socket.on('playerUpKnop', IO.playerUpKnop);
             IO.socket.on('startGame', IO.startGame);
@@ -49,10 +50,14 @@ jQuery(function($){
             console.log('room', data.room)
             
             App.players = data.room;
-            $('#playerWaitingMessage').html(data.numberOfPlayers+' Spelers aanwezig. Druk op start als alle spelers er zijn.');
+            $(".players").html("");
+            for (var p = 0; p < data.numberOfPlayers; p++){
+                $('.players').append("<img src='man.svg' style='height:100px; "+(p<App.playersReady?"filter:invert(1);":"")+"'>");
+            }
+            $('#playerWaitingMessage').html('Press start when everyone is here.');
         },
         showStartButton: function (data) {
-            $('#startButton').show();
+            $('.startButtonCont').show();
         },
         tussenscores: function (data) {
             console.log(data);
@@ -64,9 +69,9 @@ jQuery(function($){
             $(".tussenscores").show(400);
            
             
-              $(".tussenscorestitel").html("Tussenstand voor " + App.bedrijf);
+              $(".tussenscorestitel").html("<div class=ranking>Ranking</div>" + App.bedrijf);
               var highinhoud =
-                "<table><tr><td>#</td><td>Code</td><td>Score</td><td>Tijdverschil</td></tr>";
+                "<table><tr><td>#</td><td>Code</td><td>Score</td><td>Time Diff</td></tr>";
             
             var nummer = 0;
             $.each(scorelijst, function (index, lijst) {
@@ -239,7 +244,21 @@ jQuery(function($){
             }
             $('.extraknoppen').show();
             $('.tijdScore').show();
-            App.startVraag();
+            $("#gameArea").html("<div class=herego>Here we go!</div>");
+            var opacity = 2;
+            var intro = setInterval(function () {
+                opacity-=0.01
+                $('.herego').css('opacity',0);
+
+                window.radius += 0.002 * window.innerWidth;
+                if (window.radius > window.innerWidth * 1.2) {
+                     App.startVraag();
+                    $('body').css('background-color', '#894894');
+                    $('canvas').remove();
+                    $('.background').addClass('postIntro');
+                    clearInterval(intro);
+
+            }}, 10);
           //  $('#gameArea').html($('.game1').html());
           },
           playerPressedKnop : function(data) {
@@ -247,8 +266,8 @@ jQuery(function($){
             console.log('playerPressedKnop',data);
         },
         countdown: function (data) {
-            console.log('tijd: ' + data);
-            $('.tijdScore .tijd').html(data);
+           // console.log('tijd: ' + data);
+            $('.tijdScore .tijd').html(new Date(data * 1000).toISOString().substr(11, 8));
             $('.tijdScore .score').html(App.score);
         },
         finished: function (data) {
@@ -287,9 +306,23 @@ jQuery(function($){
         },
       
         playerPressedStart : function(data) {
-           // App.Player.playerPressedStart(data);
-            console.log('playerPressedStart',data);
+            // App.Player.playerPressedStart(data);
+             console.log('playerPressedStart',data);
         },
+        someonePressedStart : function(data) {
+            // App.Player.playerPressedStart(data);
+            App.playersReady=data.playersReady;
+            $(".players").html("");
+            for (var p = 0; p < App.numberOfPlayers; p++){
+                $('.players').append("<img src='man.svg' style='height:100px; "+(p<data.playersReady?"filter:invert(1);":"")+"'>");
+            }
+            if (App.numberOfPlayers == App.playersReady && App.playerNumber == 0) {
+                App.Player.playerPressedStart(data);
+
+                //IO.socket.emit('playerPressedStart', data);
+
+            }
+         },
         someonePressedAntwoordDoorvoeren: function (data) {
             App.Player.someonePressedAntwoordDoorvoeren(data);
            console.log('someonePressedAntwoordDoorvoeren',data);
@@ -321,6 +354,7 @@ jQuery(function($){
     };
 
     var App = {
+        playersReady:0,
         score:0,
         huidigeMuziek: '',
         huidigeVideo:'',
@@ -414,9 +448,10 @@ jQuery(function($){
                 $('#gameArea').html($('.' + App.vragenJSON[App.vraagnummer].Vraag).html());
                 
             } else {
+                $('body').css('background-color', "hsl(" + Math.random() * 255 + ",70%,25%)");
 
                 $('.vraagTekst').html(App.vragenJSON[App.vraagnummer].Vraag);
-                $('.vraagAfbeelding').css('background-image', 'url(https://remoteteambuilding.nl/achter/' + App.vragenJSON[App.vraagnummer].Achtergrond + ')');
+                $('.vraagAfbeelding, .background').css('background-image', 'url(https://remoteteambuilding.nl/achter/' + App.vragenJSON[App.vraagnummer].Achtergrond + ')');
                 $('#gameArea').html($('.vraagContainer').html());
                 if (App.vragenJSON[App.vraagnummer].Soort == 'video') {
                     $('#gameArea .vraagAfbeelding').html($('.videoContainer').html());
@@ -438,7 +473,7 @@ jQuery(function($){
             myName: '',
             onPlayerJoinClick: function () {
                 console.log('Player clicked "Join"');
-                $('#btnStart').hide();
+                $('.btnStartCont').hide();
                 $('.codeInput').hide();
                  
                  $.ajax({
@@ -452,7 +487,7 @@ jQuery(function($){
                              App.sessieId = wat[1];
                              App.bedrijf = wat[4];
                              if (wat[3] == 'aangemaakt') {
-                                 $('#playerWaitingMessage').html('1 Speler aanwezig. Druk op start als alle spelers er zijn.');
+                                 $('#playerWaitingMessage').html('Player joined, press start when everyone is here.');
                                  var data = {
                                      gameId: ($('#inputGameId').val()),
                                      playerName: $('#inputPlayerName').val() || 'NoName'
@@ -466,15 +501,15 @@ jQuery(function($){
                                  App.myRole = 'Player';
                                  App.Player.myName = data.playerName;
                              } else {
-                                $('#playerWaitingMessage').html('Dit spel is al begonnen.');
-                                $('#btnStart').show();
+                                $('#playerWaitingMessage').html('This game has already started.');
+                                $('.btnStartCont').show();
                                 $('.codeInput').show();
     
                                  console.log(wat)
                              }
                          } else {
-                            $('#playerWaitingMessage').html('Deze code bestaat niet');
-                            $('#btnStart').show();
+                            $('#playerWaitingMessage').html('This code doesn\'t exist');
+                            $('.btnStartCont').show();
                             $('.codeInput').show();
 
                              console.log('bestaat niet...')
@@ -491,9 +526,9 @@ jQuery(function($){
 
               
             },
-            onPlayerStartClick: function () {
+            playerPressedStart: function () {
                 console.log('Player clicked "Start"');
-                 $('#startButton').hide();
+                 $('.startButtonCont').hide();
                  var data = {
                     gameId: ($('#inputGameId').val()),
                      playerName: $('#inputPlayerName').val() || 'NoName',
@@ -510,7 +545,7 @@ jQuery(function($){
                      success: function (dat) {
                          if (dat != "bestaatniet") {
                              console.log('data:', dat.split(","));
-                             $('#playerWaitingMessage').html('1 Speler aanwezig. Druk op start als alle spelers er zijn.');
+                             $('#playerWaitingMessage').html('1 Player joined, press start when everyone is here.');
                               var data = {
                                   gameId: App.gameId,
                                   sessieId: App.sessieId,
@@ -518,14 +553,13 @@ jQuery(function($){
                               };
                                
                             console.log(data)
-                             //IO.socket.emit('playerJoinGame', data);
-                             //App.mySocketId = data.mySocketId;
+                             
 
-                             IO.socket.emit('playerPressedStart', data);
+                             IO.socket.emit('playersPressedStart', data);
 
                          } else {
-                            $('#playerWaitingMessage').html('Deze code bestaat niet');
-                            $('#btnStart').show();
+                            $('#playerWaitingMessage').html('This code doesn\'t exist');
+                            $('.btnStartCont').show();
                             $('.codeInput').show();
 
                              console.log('bestaat niet...')
@@ -538,6 +572,24 @@ jQuery(function($){
                         console.log("wat",er)
                     }
                  })
+                
+                          
+                 
+                 
+
+              
+            },
+            onPlayerStartClick: function () {
+                 $('.startButtonCont').hide();
+                $('#playerWaitingMessage').html("The game will start when everybody pressed Start");
+                 var data = {
+                    gameId: App.gameId,
+                    totalTime:App.totalTime
+                 };
+
+                             IO.socket.emit('playerPressedStart', data);
+
+                        
                 
                           
                  

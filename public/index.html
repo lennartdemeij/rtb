@@ -10,8 +10,211 @@
     <!-- Let's borrow a cool looking Font from Google -->
     <link href='https://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
 
-    <link href="css/styles.css" rel="stylesheet">
+    <!-- <link href="css/style.css" rel="stylesheet"> -->
     <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:600&display=swap');
+*{
+    font-family: 'Montserrat', sans-serif;
+
+}
+.btnCont{
+  position: relative;
+  display: inline-flex;
+  width: 180px;
+  height: 55px;
+  margin: 15px 15px;
+  perspective: 1000px;
+}
+.btnCont>div{
+  font-size: 19px;
+  letter-spacing: 1px;
+  transform-style: preserve-3d;
+  transform: translateZ(-25px);
+  transition: transform .25s;
+}
+.btnCont>div:before,
+.btnCont>div:after{
+  position: absolute;
+  content: attr(label);
+  height: 55px;
+  width: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 5px solid black;
+  box-sizing: border-box;
+}
+.btnCont:nth-child(1) div:before{
+  color: #fff;
+  background: #000;
+  transform: rotateY(0deg) translateZ(25px);
+}
+.btnCont:nth-child(1) div:after{
+  color: #000;
+  transform: rotateX(90deg) translateZ(25px);
+}
+.btnCont:nth-child(2) div:before{
+  color: #fff;
+  background: black;
+  transform: rotateX(-90deg) translateZ(25px);
+}
+.btnCont:nth-child(2) div:after{
+  color: #000;
+  transform: rotateY(0deg) translateZ(25px);
+}
+.btnCont:nth-child(1) div:hover{
+  transform: translateZ(-25px) rotateX(-90deg);
+}
+.btnCont:nth-child(2) div:hover{
+  transform: translateZ(-25px) rotateX(90deg);
+}
+
+.info.buttons {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    position: absolute;
+    bottom: 60px;
+    left: 20px;
+    opacity: 0.5;
+}
+
+.logo img {
+    width: 200px;
+    filter: brightness(10.5);
+}
+        html,body,.background{
+            margin:0px;
+            padding:0px;
+            overflow: hidden;
+            background-color:rgb(70, 27, 78);
+            height:100vh;
+            width:100vw;
+        }
+        .background{
+            background-color: none;
+            display:absolute;
+            top:0px;
+            left:0px;
+            z-index:0;
+
+        }
+        .postIntro{
+            background-size:cover;
+            background-position: center center;
+            filter: blur(10px);
+    mix-blend-mode: luminosity;
+    opacity: 0.5;
+        }
+        canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100vw;
+    height: 100vh;
+}
+.joinGameWrapper{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+input[type="text"] {
+    font-size: 28px;
+    padding: 0px 0px;
+    line-height: 0px;
+    height: 60px;
+    border: 0px;
+    transform: rotateX(30deg) translateY(-5px);
+    transition: 0.4s;
+    transform-style: preserve-3d;
+    outline: none;
+    text-align: center;
+    margin:10px;
+transform-origin: bottom center;
+text-shadow: 0px -2px 1px #ccc;
+    color: #333;
+    box-shadow: 0px 20px 0px -10px #deb7e4;
+}
+
+.input {
+    perspective: 1000px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    position:relative;
+}
+.border{
+    content: " ";
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 18px;
+    background: #deb7e4;
+    transition: 0.4s;
+    transform-origin: top center;
+
+    transform: rotateX(
+-60deg
+) translate3d(0px, 55px, -20px);
+
+}
+input[type="text"]:focus + .border {
+    transform: rotateX(-90deg) translate3d(0px, 53px, 10px)
+}
+
+input[type="text"]:focus {
+    transform: rotateX(0deg);
+    text-shadow:0px 0px 0px #ccc;
+    box-shadow: 0px 0px 0px 0px #deb7e4;
+}
+#playerWaitingMessage {
+    text-align: center;
+    padding: 10px;
+    margin-bottom: -20px;
+}
+#gameArea{
+    height:100vh;
+    width:100vw;
+    z-index:2;
+    position:absolute;
+    top:0px;
+    left:0px;
+}
+.vraagTekst {
+    position: absolute;
+    /* background: #f00; */
+    bottom: 171px;
+    left: 50px;
+    width: calc(100vw - 400px);
+    font-size: 22px;
+    text-align: center;
+    color: #fff;
+    text-shadow: 0px 4px 5px #000;
+}
+
+.antwoordContainer {
+    position: absolute;
+    width: calc(100vw - 550px);
+    margin-left: 220px;
+    display: flex;
+    position: absolute;
+    bottom: 50px;
+}
+
+input#vraagAntwoord {
+    width: calc(100vw - 800px);
+}
+
         .knopcontainer{
             display:flex;
         }
@@ -24,11 +227,34 @@ margin:10px;
         .knopactief{
             background-color:#0f0;
         }
-        .vraagAfbeelding{
-            height:400px;
-            background-size:cover;
-            width:600px;
-        }
+        .vraagAfbeelding {background-size: cover;
+            background-color:#deb7e4;
+            background-position: center center;
+    width: calc(100vw - 400px);
+    height: calc(100vh - 400px);
+    margin: 50px;
+    position:relative;border-radius:10px;
+border-bottom:4px solid #deb7e4}
+.vraagAfbeelding::before,
+  .vraagAfbeelding::after {
+    z-index: -1;
+    position: absolute;
+    content: "";
+    bottom: 15px;
+    left: 10px;
+    width: 50%;
+    top: 80%;
+    max-width:700px;
+    background: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+    transform: rotate(-3deg);
+  }
+   .vraagAfbeelding::after {
+    transform: rotate(3deg);
+    right: 10px;
+    left: auto;
+  }
+
 
 
 
@@ -116,6 +342,7 @@ cursor:pointer;
     display:flex;
     justify-content: center;
     align-items: center;
+    z-index:999;
 }
 .popup{
     background:#bbb;
@@ -124,13 +351,31 @@ cursor:pointer;
 }
 .extraknoppen{
     position: absolute;
-    bottom:20px;
-    right: 20px;
+    top: 50px;
+    right: 50px;
+    z-index: 998;
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+}
+.extraknoppen>div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.extraknoppen .btnCont{
+    display:flex;
+    align-self: center;
+    margin-bottom: 0px;
+    z-index: 997;
 }
 .tijdScore{
-    top: 0px;
-    right: 0px;
-    position: absolute;
+  
+}
+.tijd{
+    color: #fff;
+    font-size: 60px;
+    text-align: center;
 }
 .game6container{
     position:relative;
@@ -142,53 +387,152 @@ cursor:pointer;
     height:100px;
 background-color:#ccc;
 }
+.herego {
+    color: #fff;
+    font-size: 50px;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    transition: 4s;
+}
+.scoreCont {
+    background: #00000033;
+    color: #fff;
+    padding: 20px;
+    border-radius: 6px;
+    /* mix-blend-mode: screen; */
+    text-align: center;
+}
 
+.scoretitle {
+    font-size: 29px;
+}
+
+.score {
+    background: #000000aa;
+    border-radius: 100px;
+    padding: 10px 0px;
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+.tussenscores {
+    background: #00000033;
+    color: #fff;
+    padding: 20px;
+    border-radius: 6px;
+    /* mix-blend-mode: screen; */
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.tussenscorestitel {}
+
+.ranking {
+    font-size: 29px;
+}
+
+.tussenscorescontent {
+    font-size: 14px;
+    overflow-y:auto;
+    overflow-x:hidden;
+    width:224px;
+    height:calc(100vh - 870px);
+    display: block;
+    /* margin-bottom: 10px; */
+}
+.tussenscorescontent::-webkit-scrollbar {
+  display: none;
+}
+
+/* Demonstrate a "mostly customized" scrollbar
+ * (won't be visible otherwise if width/height is specified) */
+.tussenscorescontent:-webkit-scrollbar {
+  width: 5px;
+  height: 8px;
+  background-color: #aaa; /* or add it to the track */
+}
+
+/* Add a thumb */
+.tussenscorescontent:-webkit-scrollbar-thumb {
+    background: #000;
+}
+.tussenscorescontent table{
+    border-collapse:collapse;
+    width:214px;
+    margin-top:10px;       
+}
+.tussenscorescontent td{
+    padding:7px;
+}
+.tussenscorescontent tr:nth-of-type(odd){background-color:#00000033}
 
     </style>
 </head>
 
 <body>
 
-
+<div class='background'></div>
     <div id="gameArea">
 
         <div class="joinGameWrapper">
             <div class='codeInput'>
-            <div class="info">
+            <div class="info" style='display:none;'>
                 <label for="inputPlayerName">Your Name:</label>
                 <input id="inputPlayerName" type="text" />
             </div>
 
             <div class="info">
-                <label for="inputGameId">Code:</label>
-                <input id="inputGameId" type="text"/>
+                <div class='input'><input id="inputGameId"  autocomplete="off" type="text" placeholder="code"/>
+                    <!-- <div class='border'></div> -->
+                </div>
             </div>
         </div>
             <div class="info buttons">
-                <button id="btnStart" class="btn">Join</button>
-                <button id="startButton" class="btn" style='display:none;'>Start Game</button>
+                <div class=players></div>
+                <div class='btnCont btnStartCont'><div id="btnStart" class="btn" label="Join"></div></div>
+
+                </div>
+                <div class="info buttons">
+
+                <div class='btnCont startButtonCont' style='display:none;'>
+                <div id="startButton" class="btn"  label="Start"></div>
+            </div>
                 <div id="playerWaitingMessage"></div>
             </div>
         </div>
     </div>
     <div class='extraknoppen' style='display:none;'>
+        <div class='tijdScore' style='display:none;'>
+            <div class=tijd></div>
+            <div class=scoreCont>
+                <div class=scoretitle>Your Score</div><div class=score>
+                    
+                </div>
+            </div>
+        
+        </div>
         <div class='tussenscores'>
             <div class='tussenscorestitel'>
             </div>
             <div class='tussenscorescontent'>
             </div>
         </div>
-        <button id="hintButton" class="btn" >HINT</button>
-    <BR>
-        <button id="skipButton" class="btn">OVERSLAAN</button>
-    
+        <div>
+        <div class='btnCont'>
+        <div id="hintButton" class="btn" label="Hint (-10pt)"></div>
+        </div>
     </div>
-    <div class='tijdScore' style='display:none;'>
-        <div class=tijd></div>
-    <BR>
-        <div class=score></div>
-    
+    <div>
+        <div class='btnCont'>
+        <div id="skipButton" class="btn" label="Skip (-100pt)"></div>
+        </div>
     </div>
+    </div>
+    
 
 
     <div style='display:none;' class=game1>
@@ -264,11 +608,17 @@ background-color:#ccc;
     </div>
     <div class='vraagTekst'></div>
     <div class='antwoordContainer'>
-    <input type=text id=vraagAntwoord>
-    <div class='antwoordDoorvoeren'>Go</div>
+        <div class='input'><input type=text id=vraagAntwoord> 
+             <!-- <div class='border'></div> -->
+    </div>
+    <div class='btnCont'>
+    <div class='btn antwoordDoorvoeren' label="Go"></div>
 </div>
 </div>
-
+</div>
+<div class=logo>
+    <img src='https://remoteteambuilding.nl/rtb_logo_wit.png'>
+</div>
 <audio class="audio" id="muziek">
     <source src="" type="audio/mpeg">
   </audio>
@@ -287,7 +637,8 @@ background-color:#ccc;
 
     <!-- FastClick is used to eliminate the 300ms delay when clicking items on a mobile device
         https://github.com/ftlabs/fastclick -->
-    <script src="libs/fastclick.js"></script>
+        <script src="libs/fastclick.js"></script>
+    
 
     <!-- If Socket.IO is used with Express, then the /socket.io/ path will
         serve the proper Socket.IO javascript files used by the browser -->
@@ -296,6 +647,93 @@ background-color:#ccc;
 
     <!-- app.js is where all the client-side Anagrammatix game logic -->
     <script src="app.js"></script>
+<script>
+window.radius=window.innerHeight/3;
+var canvas = document.createElement('canvas'),
+    ctx = canvas.getContext('2d');
 
+var width = canvas.width = window.innerWidth,
+    height = canvas.height = window.innerHeight;
+
+window.addEventListener('resize',function(){
+  width = canvas.width = window.innerWidth;
+  height = canvas.height = window.innerHeight;
+});
+
+document.body.querySelector('.background').appendChild(canvas);
+
+
+
+var circ = (4*(Math.sqrt(2)-1)/3);
+var c = circ;
+
+var count = Math.PI;
+
+function drawBezierCircle(cx,cy,r){
+
+  var c;
+  var offsetX = 20 * Math.sin(count*2);
+  var offsetY = 15 * Math.cos(count * 2);
+ // r = r;
+
+  count += 0.01;
+
+  ctx.translate(cx,cy); // translate to centerpoint
+
+  ctx.beginPath();
+
+  // top right
+  c = circ + ( 0.2 * Math.sin(count) );
+  ctx.moveTo(offsetX + 0, offsetY + -r);
+  ctx.bezierCurveTo(
+    offsetX + c*r, offsetY + -r, 
+    offsetX + r, offsetY + -c*r, 
+    offsetX + r, offsetY + 0
+  );
+
+  // bottom right
+  c = circ + ( 0.2 * Math.cos(count) );
+  ctx.bezierCurveTo(
+    offsetX + r, offsetY + c*r, 
+    offsetX + c*r, offsetY + r, 
+    offsetX + 0, offsetY + r
+  );
+
+  // bottom left
+  c = circ + ( 0.2 * Math.sin(count * 2) );
+  ctx.bezierCurveTo(
+    offsetX + -c*r, offsetY + r, 
+    offsetX + -r, offsetY + c*r, 
+    offsetX + -r, offsetY + 0
+  );
+
+  // top left
+  c = circ + ( 0.2 * Math.cos(count + 1) );
+  ctx.bezierCurveTo(
+    offsetX + -r, offsetY + -c*r, 
+    offsetX + -c*r, offsetY + -r, 
+    offsetX + 0, offsetY + -r
+  );
+ctx.fillStyle="#894894";
+  ctx.fill();
+}
+
+
+function render(){
+  requestAnimationFrame(render);
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, width, height);
+
+  drawBezierCircle(width/2,height/2,window.radius);
+
+}
+
+render();
+
+
+
+
+</script>
 </body>
 </html>

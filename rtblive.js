@@ -12,6 +12,7 @@ exports.initGame = function (sio, socket) {
     gameSocket.on('newPlayerPosition', newPlayerPosition);
     gameSocket.on('playerPressedAntwoordDoorvoeren', playerPressedAntwoordDoorvoeren);
     gameSocket.on('playerPressedStart', playerPressedStart);
+    gameSocket.on('playersPressedStart', playersPressedStart);
     gameSocket.on('playerPressedHint', playerPressedHint);
     gameSocket.on('playerPressedSkip', playerPressedSkip);
     gameSocket.on('playerUpKnop', playerUpKnop);
@@ -38,6 +39,8 @@ function playerJoinGame(data) {
           if(io.sockets.adapter.rooms.get(data.gameId).size>1){
         console.log('begin spel');
         io.sockets.in(data.gameId).emit('showStartButton', data);
+          } else {
+              io.sockets.adapter.rooms.get(data.gameId).playersReady = 0;
     }
     console.log('socket',io.sockets.adapter.rooms.get(data.gameId).size)
 }
@@ -61,8 +64,14 @@ function stukjeMoved(data) {
     io.sockets.in(data.gameId).emit('someoneMovedStukje', data);
     console.log('someoneMovedStukje')
 }
-
 function playerPressedStart(data) {
+        io.sockets.adapter.rooms.get(data.gameId).playersReady++;
+    
+    data.playersReady = io.sockets.adapter.rooms.get(data.gameId).playersReady;
+    io.sockets.in(data.gameId).emit('someonePressedStart', data);
+
+}
+function playersPressedStart(data) {
     //  io.sockets.in(data.gameId).emit('playerPressedKnop', data);
       console.log('press')
       data.targetPlayer=Math.floor(Math.random() * io.sockets.adapter.rooms.get(data.gameId).size);
