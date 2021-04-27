@@ -189,13 +189,15 @@ input[type="text"]:focus {
     position:absolute;
     top:0px;
     left:0px;
+    perspective: 1000px;
+
 }
 .vraagTekst {
     position: absolute;
     /* background: #f00; */
-    bottom: 171px;
+    bottom: 145px;
     left: 50px;
-    width: calc(100vw - 400px);
+    width: calc(100vw - 140px);
     font-size: 22px;
     text-align: center;
     color: #fff;
@@ -203,16 +205,14 @@ input[type="text"]:focus {
 }
 
 .antwoordContainer {
-    position: absolute;
-    width: calc(100vw - 550px);
-    margin-left: 220px;
+      margin-left: 220px;
     display: flex;
     position: absolute;
     bottom: 50px;
 }
 
 input#vraagAntwoord {
-    width: calc(100vw - 800px);
+    width: calc(100vw - 520px);
 }
 
         .knopcontainer{
@@ -231,10 +231,16 @@ margin:10px;
             background-color:#deb7e4;
             background-position: center center;
     width: calc(100vw - 400px);
-    height: calc(100vh - 400px);
+    height: calc(100vh - 300px);
     margin: 50px;
     position:relative;border-radius:10px;
-border-bottom:4px solid #deb7e4}
+border-bottom:4px solid #deb7e4;
+transition: 0.4s;
+transform-style: preserve-3d;
+}
+.vraagAfbeelding:hover {
+    transform: rotateX(-5deg) rotateY(5deg);
+}
 .vraagAfbeelding::before,
   .vraagAfbeelding::after {
     z-index: -1;
@@ -247,10 +253,10 @@ border-bottom:4px solid #deb7e4}
     max-width:700px;
     background: rgba(0, 0, 0, 0.7);
     box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
-    transform: rotate(-3deg);
+    transform: rotate(-3deg) translateZ(-1px);
   }
    .vraagAfbeelding::after {
-    transform: rotate(3deg);
+    transform: rotate(3deg) translateZ(-1px);;
     right: 10px;
     left: auto;
   }
@@ -345,9 +351,15 @@ cursor:pointer;
     z-index:999;
 }
 .popup{
-    background:#bbb;
+    /* background:#bbb; */
     padding:30px;
+    color:#fff;
+    z-index:2;
 
+}
+.popup h1, .popup p {
+    max-width: 28vw;
+    text-align: center;
 }
 .extraknoppen{
     position: absolute;
@@ -357,6 +369,11 @@ cursor:pointer;
     display: flex;
     flex-direction: column;
     width: 250px;
+    perspective: 1000px;
+}
+.extraknoppen *:not(.btn){
+    transition: 0.4s;
+    perspective: 1000px;
 }
 .extraknoppen>div {
     flex: 1;
@@ -376,6 +393,15 @@ cursor:pointer;
     color: #fff;
     font-size: 60px;
     text-align: center;
+}
+.tijd:hover{
+    transform:rotateY(-30deg);
+}
+.scoreCont:hover{
+    transform:rotateY(-30deg);
+}
+.tussenscores:hover{
+    transform:rotateY(-30deg);
 }
 .game6container{
     position:relative;
@@ -469,7 +495,11 @@ background-color:#ccc;
     padding:7px;
 }
 .tussenscorescontent tr:nth-of-type(odd){background-color:#00000033}
-
+.contCont{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
     </style>
 </head>
 
@@ -649,6 +679,7 @@ background-color:#ccc;
     <script src="app.js"></script>
 <script>
 window.radius=window.innerHeight/3;
+window.filly="#894894";
 var canvas = document.createElement('canvas'),
     ctx = canvas.getContext('2d');
 
@@ -714,7 +745,7 @@ function drawBezierCircle(cx,cy,r){
     offsetX + -c*r, offsetY + -r, 
     offsetX + 0, offsetY + -r
   );
-ctx.fillStyle="#894894";
+ctx.fillStyle=window.filly;
   ctx.fill();
 }
 

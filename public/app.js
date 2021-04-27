@@ -254,9 +254,13 @@ jQuery(function($){
                 if (window.radius > window.innerWidth * 1.2) {
                      App.startVraag();
                     $('body').css('background-color', '#894894');
-                    $('canvas').remove();
+                    $("canvas").prependTo(".overlay");
+                    $('.background canvas').remove();
+
+
                     $('.background').addClass('postIntro');
                     clearInterval(intro);
+                    window.radius = window.innerHeight / 3;
 
             }}, 10);
           //  $('#gameArea').html($('.game1').html());
@@ -905,13 +909,13 @@ jQuery(function($){
                 App.score -= hintKosten;
                 App.Player.updateStatus(data);
 
-                alertData(App.vragenJSON[App.vraagnummer].Hint);
+                App.Player.alertData("hint",App.vragenJSON[App.vraagnummer].Hint);
             },
             someonePressedSkip: function (data) {
                 App.score -= skipKosten;
                 App.Player.updateStatus(data);
 
-                alertData(App.vragenJSON[App.vraagnummer].Antwoord.split("|")[0]);
+                App.Player.alertData("skip",App.vragenJSON[App.vraagnummer].Antwoord.split("|")[0]);
 
                 App.vraagnummer++;
                 App.startVraag();
@@ -938,7 +942,7 @@ jQuery(function($){
                 }
                 App.Player.updateStatus(data);
 
-                alertData(data.uitkomst);
+                App.Player.alertData(data.uitkomst);
 
                 console.log(data)
            //     IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
@@ -957,8 +961,33 @@ jQuery(function($){
                         console.log("wat",er)
                     }
                  })
-            }
+            },
+            alertData: function (uitkomst, uitleg = "") {
+                var uitkomsttekst = "";
 
+                if (uitkomst == 'fout') {
+                    uitkomsttekst = "Wrong";
+                    window.filly = "#a72346";
+                } else if (uitkomst == 'goed') {
+                    uitkomsttekst = "Correct";
+
+                    window.filly = "#08c768";
+                } else if (uitkomst == 'skip') {
+                    uitkomsttekst = "Skipped";
+
+                    window.filly = "#966b90";
+                } else if (uitkomst == 'hint') {
+                    uitkomsttekst = "Hint";
+
+                    window.filly = "#966b90";
+                
+                } else {
+                    window.filly = "#966b90";
+            
+                }
+                $('.overlay').show();
+                $('.overlay .popup').html("<h1>"+uitkomsttekst+"</h1><p>"+(uitkomst=='goed'?App.vragenJSON[App.vraagnummer].Correct:(uitkomst=='fout'?App.vragenJSON[App.vraagnummer].Fout:uitleg))+"</p><div class='contCont'><div class='btnCont'><div onclick='$(\".overlay\").hide();' class='btn' label=\"Close\"></div></div></div>");
+            }
         }
     };
 
@@ -981,7 +1010,3 @@ jQuery(function($){
 
 
 }($));
-function alertData(uitkomst, uitleg=""){
-    $('.overlay').show();
-    $('.overlay .popup').html("<h1>"+uitkomst+"</h1><p></p><div onclick='$(\".overlay\").hide();'>sluiten</div>");
-}
