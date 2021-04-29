@@ -184,7 +184,7 @@ jQuery(function($){
               for (var i = 0; i < App.numberOfPlayers; i++){
                 App.stukjesX[i]=Math.random()*200;
                 App.stukjesY[i]=Math.random()*200;
-                $(".game6container").append("<div class='stukje stukje"+(i)+"' stukjenr="+(i)+">"+(i+1)+"</div>");
+                $(".game6container").append("<div class='stukje stukje"+(i)+"' stukjenr="+(i)+" style='background-size:100%;background-position:0px -"+((425/App.numberOfPlayers)*i)+"px; width:490px; height:"+(425/App.numberOfPlayers/0.7)+"px;'>"+(i+1)+"</div>");
               }
             //game2
             if (App.targetPlayer != App.playerNumber) {
@@ -762,7 +762,7 @@ jQuery(function($){
 
                 for (var j = 0; j < App.numberOfPlayers; j++) {
                     if (App.playerNumber == 0) {
-                        if (Math.abs(App.stukjesX[0] - App.stukjesX[j]) < 5 && Math.abs(App.stukjesY[0] - (App.stukjesY[j]-(j*100))) < 5){
+                        if (Math.abs(App.stukjesX[0] - App.stukjesX[j]) < 5 && Math.abs(App.stukjesY[0] - (App.stukjesY[j]-(j*(0.7*$('.stukje').height())))) < 5){
                             
                         } else {
                             allesgoed = false;

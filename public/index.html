@@ -412,7 +412,23 @@ cursor:pointer;
     transition:0.4s;
     height:100px;
 background-color:#ccc;
+background-image: url(puzzelachter.jpg);
+clip-path: polygon(50% 0%, 100% 30%, 100% 100%, 50% 70%, 0 100%, 0 30%);
+
+
+
 }
+.stukje:first-of-type{
+    clip-path: polygon(0% 0%, 100% 0, 100% 100%, 50% 70%, 0 100%);
+
+
+}
+.stukje:last-of-type{
+
+    clip-path: polygon(0 30%, 50% 0, 100% 30%, 100% 100%, 0% 100%);
+
+}
+
 .herego {
     color: #fff;
     font-size: 50px;
@@ -766,5 +782,6 @@ render();
 
 
 </script>
+
 </body>
 </html>
