@@ -181,6 +181,8 @@ jQuery(function($){
             }
               //game6
               $(".game6container").html("");
+              $('.vraagAfbeelding, .background').css('background-image', 'url(https://remoteteambuilding.nl/achter/' + App.vragenJSON[App.vraagnummer].Achtergrond + ')');
+
               for (var i = 0; i < App.numberOfPlayers; i++){
                 App.stukjesX[i]=Math.random()*200;
                 App.stukjesY[i]=Math.random()*200;
