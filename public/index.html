@@ -210,7 +210,34 @@ input[type="text"]:focus {
     position: absolute;
     bottom: 50px;
 }
+.muziek {
+    width: 100%;
+    height: 100%;
+    font-size: 0;
+    position: relative;
+}
 
+.muziekKnop {
+    height: 100%;
+    width: 100%;
+    cursor:pointer;
+}
+
+.muziek:before {
+  left:50%;
+  top:50%;
+  margin-top:-60px;
+  margin-left:-30px;
+    position: absolute;
+    content: "";
+   width: 0; 
+  height: 0; 
+  border-top: 60px solid transparent;
+  border-bottom: 60px solid transparent;
+  
+  border-left: 100px solid white;
+filter:drop-shadow(0px 0px 10px #000000aa);
+}
 input#vraagAntwoord {
     width: calc(100vw - 520px);
 }
@@ -298,11 +325,36 @@ width:100vw;}
 .targetPoint{
    background-color:#00000000
 }
+.maze {
+    background-image:url('aap.png');
+    background-size:contain;
+    background-repeat: no-repeat;
+ 
+    height: 600px;
+    width: 600px;
+    position: relative;
+    margin: 20px;
+    margin-left: calc(60vw - 600px);
+  
+    box-sizing: border-box;
+    padding: 40px 225px;
+    margin-bottom: -200px;
+}
+.maze1 {
+    background-image:url('mens.png');
+    
+    padding: 79px 114px 79px 74px;
+    background-size: 873px;
+    background-position: top center;
+
+}
 .maze div {
- flex-basis:10%;}
-.maze{display:flex;flex-wrap:wrap;height:300px;width:300px;position:relative;}
-.maze .muur{
-    background-color:#000;
+    width: 15px;
+    height: 15px;
+    float: left;
+}
+    .maze .muur{
+    background-color:#fff;
 }
 .maze .open{
     background-color:#ffffff00;
@@ -310,32 +362,139 @@ width:100vw;}
 .mazeplayer{
     position:absolute;
     z-index:999;
-    width:30px;
-    height:30px;
+    width:15px;
+    height:15px;
     border-radius: 50%;
-    background-color:#f00;
+    background-color: #ffb000;
+    margin-left: calc(60vw - 375px);
+    margin-top: 60px;
+    box-shadow: 0px 0px 10px #fff, 0px 0px 10px #fff, 0px 0px 10px #fff;
 
 }
 .mazeknop{
-    margin:10px;
-height:40px;
-width:40px;
-box-shadow:0px 3px 8px #000000bb;
-float:left;
-background-color:#00f;
-cursor:pointer;
+    margin: 10px;
+    height: 80px;
+    width: 120px;
+    box-shadow: 0px 3px 8px #000000bb;
+    float: left;
+    background-color: #c3178e;
+    cursor: pointer;
+    border-radius: 9px;
+    border-bottom: 4px solid #000000aa;
+    border-top: 2px solid #ffffffaa;
+    font-size: 0px;
+    position: relative;
+    margin-left: 40px;
+    /* margin-top: -100px; */
+    float: left;
 }
 
+.mazeknop[richting="right"]:before {
+    left: 50%;
+    top:50%;
+    margin-top: -10px;
+    margin-left: -10px;
+    position: absolute;
+    content: "d";
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 20px solid white;
+    filter:drop-shadow(0px 0px 10px #000000aa);
+}
+.mazeknop[richting="left"]:before {
+    left: 50%;
+    top:50%;
+    margin-top: -10px;
+    margin-left: -10px;
+    position: absolute;
+    content: "d";
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 20px solid white;
+    filter:drop-shadow(0px 0px 10px #000000aa);
+}
+
+.mazeknop[richting="down"]:before {
+    left: 50%;
+    top:50%;
+    margin-top: -10px;
+    margin-left: -10px;
+    position: absolute;
+    content: "d";
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 20px solid white;
+    filter:drop-shadow(0px 0px 10px #000000aa);
+}
+.mazeknop[richting="up"]:before {
+    left: 50%;
+    top:50%;
+    margin-top: -10px;
+    margin-left: -10px;
+    position: absolute;
+    content: "d";
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 20px solid white;
+    filter:drop-shadow(0px 0px 10px #000000aa);
+}
+
+.maze1 .mazeknop:before{
+    display:none !important;
+}
 .groteKnop{
-    transition: 0.2s;
+    transition: 0.6s;
     margin:10px;
 height:100px;
 width:100px;
-box-shadow:0px 3px 8px #000000bb;
+background-image: url(konijn.png);
+background-repeat: no-repeat;
+background-size:contain;
+background-position: center center;
 float:left;
-background-color:#00f;
 cursor:pointer;
 }
+
+.konijn{
+    transition: 0.6s;
+    margin:10px;
+height:100px;
+width:100px;
+background-image: url(konijn.png);
+background-repeat: no-repeat;
+background-size:contain;
+background-position: center center;
+float:left;
+animation-name: bounce;
+        animation-timing-function: ease;
+        animation-duration: 0.6s;
+        position:absolute;
+        filter:sepia(1);
+
+}
+
+
+.konijn1{
+    transition: 0.6s;
+    margin:10px;
+height:100px;
+width:100px;
+background-image: url(konijn2.png);
+background-repeat: no-repeat;
+background-size:contain;
+background-position: center center;
+float:left;
+animation-name: bounce;
+        animation-timing-function: ease;
+        animation-duration: 0.6s;
+        position:absolute;
+filter:sepia(0.3);
+}
+
 .overlay{
     position:fixed;
     top:0px;
@@ -425,7 +584,7 @@ clip-path: polygon(50% 0%, 100% 30%, 100% 100%, 50% 70%, 0 100%, 0 30%);
 }
 .stukje:last-of-type{
 
-    clip-path: polygon(0 30%, 50% 0, 100% 30%, 100% 100%, 0% 100%);
+    clip-path: polygon(0 30%, 50% 0, 100% 30%, 100% 70%, 0% 70%);
 
 }
 
@@ -515,6 +674,33 @@ clip-path: polygon(50% 0%, 100% 30%, 100% 100%, 50% 70%, 0 100%, 0 30%);
     display:flex;
     justify-content: center;
     align-items: center;
+}
+
+.bounce {
+        animation-name: bounce;
+        animation-timing-function: ease;
+        animation-duration: 0.6s;
+        animation-iteration-count: 1;
+    }
+    @keyframes bounce {
+        0%   { transform: scale(1,1)    translateY(0); }
+        10%  { transform: scale(1.1,.9) translateY(0); }
+        30%  { transform: scale(.9,1.1) translateY(-200px); }
+        50%  { transform: scale(1,1)    translateY(0); }
+        57%  { transform: scale(1,1)    translateY(-7px); }
+        64%  { transform: scale(1,1)    translateY(0); }
+        100% { transform: scale(1,1)    translateY(0); }
+    }
+    .maze1 + .mazeplayer {
+        margin-left: calc(60vw - 526px);
+    margin-top: 99px;
+    }
+    .videoKnop iframe {
+    height: calc(100vh - 300px);
+    width: calc(100vw - 400px);
+}
+.videoKnop{
+    background:#000;
 }
     </style>
 </head>
@@ -613,7 +799,7 @@ clip-path: polygon(50% 0%, 100% 30%, 100% 100%, 50% 70%, 0 100%, 0 30%);
     <div style='display:none;' class=game5>
         <div class='game5container' style=' width: 100vw;
         height: 100vh;'>
-            <div class='maze'>
+            <div class='maze maze1'>
 
             </div>
             <div class='mazeplayer'></div>
@@ -631,9 +817,23 @@ clip-path: polygon(50% 0%, 100% 30%, 100% 100%, 50% 70%, 0 100%, 0 30%);
 
 
     <div style='display:none;' class=game4>
-        <div class='groteKnopContainer' style=' width: 100vw;
+        <div class='groteKnopContainer' style=' width: 100vw; background-size: cover;
         height: 100vh;'>
       <div class='groteKnop'></div>
+      <div class='konijn'></div>
+      <div class='konijn'></div>
+      <div class='konijn'></div>
+      <div class='konijn'></div>
+    </div>
+    </div>
+    <div style='display:none;' class=game7>
+        <div class='groteKnopContainer' style=' width: 100vw; background-size: cover;
+        height: 100vh;'>
+      <div class='groteKnop' style='background-image:url(konijn2.png);'></div>
+      <div class='konijn1'></div>
+      <div class='konijn1'></div>
+      <div class='konijn1'></div>
+      <div class='konijn1'></div>
     </div>
     </div>
 

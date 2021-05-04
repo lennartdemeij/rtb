@@ -19,6 +19,7 @@ exports.initGame = function (sio, socket) {
     gameSocket.on('playerGotItWrong', playerGotItWrong);
     gameSocket.on('klikGame', klikGame);
     gameSocket.on('stukjeMoved', stukjeMoved);
+    gameSocket.on('puzzelgoed', puzzelgoed);
 };
 function playerJoinGame(data) {
     console.log('Player ' + data.playerName + 'attempting to join game: ' + data.gameId );
@@ -63,6 +64,10 @@ function playerPressedAntwoordDoorvoeren(data) {
 function stukjeMoved(data) {
     io.sockets.in(data.gameId).emit('someoneMovedStukje', data);
     console.log('someoneMovedStukje')
+}
+function puzzelgoed(data) {
+    io.sockets.in(data.gameId).emit('puzzelgoed', data);
+    console.log('puzzelgoed')
 }
 function playerPressedStart(data) {
         io.sockets.adapter.rooms.get(data.gameId).playersReady++;

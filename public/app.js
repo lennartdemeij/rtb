@@ -35,6 +35,7 @@ jQuery(function($){
             IO.socket.on('klikGameClicked', IO.klikGameClicked);
             IO.socket.on('tussenscores', IO.tussenscores);
             IO.socket.on('someoneMovedStukje', IO.someoneMovedStukje);
+            IO.socket.on('puzzelgoed', IO.puzzelgoed);
 
             IO.socket.on('countdown', IO.countdown);
             IO.socket.on('finished', IO.finished);
@@ -42,7 +43,7 @@ jQuery(function($){
 
         onConnected: function () {
             App.mySocketId = IO.socket.id;
-            console.log(App.mySocketId );
+            console.log(App.mySocketId);
         },
         playerJoinedRoom: function (data) {
             console.log('hooi', data);
@@ -51,51 +52,55 @@ jQuery(function($){
             
             App.players = data.room;
             $(".players").html("");
-            for (var p = 0; p < data.numberOfPlayers; p++){
-                $('.players').append("<img src='man.svg' style='height:100px; "+(p<App.playersReady?"filter:invert(1);":"")+"'>");
+            for (var p = 0; p < data.numberOfPlayers; p++) {
+                $('.players').append("<img src='man.svg' style='height:100px; " + (p < App.playersReady ? "filter:invert(1);" : "") + "'>");
             }
             $('#playerWaitingMessage').html('Press start when everyone is here.');
         },
         showStartButton: function (data) {
             $('.startButtonCont').show();
         },
+        puzzelgoed: function (data) {
+            App.puzzelgoed = true;
+            $('.stukje').css("filter","grayscale(1)");
+        },
         tussenscores: function (data) {
             console.log(data);
             var scorelijst = data.split("|---|");
             for (var j = 0; j < scorelijst.length; j++) {
-              scorelijst[j] = scorelijst[j].split("|");
+                scorelijst[j] = scorelijst[j].split("|");
             }
       
             $(".tussenscores").show(400);
            
             
-              $(".tussenscorestitel").html("<div class=ranking>Ranking</div>" + App.bedrijf);
-              var highinhoud =
+            $(".tussenscorestitel").html("<div class=ranking>Ranking</div>" + App.bedrijf);
+            var highinhoud =
                 "<table><tr><td>#</td><td>Code</td><td>Score</td><td>Time Diff</td></tr>";
             
             var nummer = 0;
             $.each(scorelijst, function (index, lijst) {
-              nummer++;
-              //console.log(lijst[3]);
-              var detijd = lijst[4];
+                nummer++;
+                //console.log(lijst[3]);
+                var detijd = lijst[4];
       
-              //console.log(secondsTimeSpanToHMS(detijd));
-              if (nummer != scorelijst.length) {
-                if (lijst[4] != undefined) {
-                  highinhoud +=
-                    '<tr data-tijd="' +
-                    detijd +
-                    '" starttijd="' +
-                    lijst[2] +
-                    '"><td>' +
-                    nummer +
-                    "</td><td>" +
-                    lijst[1] +
-                    "</td><td>" +
-                    detijd +
-                    "</td><td></td></tr>";
+                //console.log(secondsTimeSpanToHMS(detijd));
+                if (nummer != scorelijst.length) {
+                    if (lijst[4] != undefined) {
+                        highinhoud +=
+                            '<tr data-tijd="' +
+                            detijd +
+                            '" starttijd="' +
+                            lijst[2] +
+                            '"><td>' +
+                            nummer +
+                            "</td><td>" +
+                            lijst[1] +
+                            "</td><td>" +
+                            detijd +
+                            "</td><td></td></tr>";
+                    }
                 }
-              }
             });
             highinhoud += "</table>";
             $(".tussenscorescontent").html(highinhoud);
@@ -103,29 +108,29 @@ jQuery(function($){
       
             var rows = $table.find("tr").get();
             rows.sort(function (a, b) {
-              var keyA = parseInt($(a).attr("data-tijd"));
-              var keyB = parseInt($(b).attr("data-tijd"));
-              if (keyA < keyB) return 1;
-              if (keyA > keyB) return -1;
-              return 0;
+                var keyA = parseInt($(a).attr("data-tijd"));
+                var keyB = parseInt($(b).attr("data-tijd"));
+                if (keyA < keyB) return 1;
+                if (keyA > keyB) return -1;
+                return 0;
             });
             $.each(rows, function (index, row) {
-              $table.children("tbody").append(row);
+                $table.children("tbody").append(row);
             });
             $("table")
-              .find("tr")
-              .each(function (i) {
-                if (i > 0) {
-                  $(this).find("td:first-of-type").html(i);
-                }
-              });
+                .find("tr")
+                .each(function (i) {
+                    if (i > 0) {
+                        $(this).find("td:first-of-type").html(i);
+                    }
+                });
             $("table")
-              .find("tr")
-              .each(function (i) {
-                if (App.gameId == $(this).find("td:nth-of-type(2)").html()) {
-                  $(this).addClass("actief");
-                }
-              });
+                .find("tr")
+                .each(function (i) {
+                    if (App.gameId == $(this).find("td:nth-of-type(2)").html()) {
+                        $(this).addClass("actief");
+                    }
+                });
             var onzetijd = $(".actief").attr("starttijd");
       
             $("table")
@@ -150,129 +155,151 @@ jQuery(function($){
                 });
         },
         startGame: function (data) {
-          
-            App.targetPlayer = data.targetPlayer;
-            console.log('targetPlayer', App.targetPlayer);
-            if (App.targetPlayer != App.numberOfPlayers - 1) {
-                App.mazePlayer = App.targetPlayer + 1;
-                
+            if (App.targetPlayer > -1) {
+                console.log('al gestart!')
             } else {
-                App.mazePlayer = 0;
-            }
-            App.playerNumber = App.players.indexOf(App.mySocketId);
-            if (App.playerNumber > 0) {
-                var k = setInterval(function () {
-                  //  console.log(App.game4opacity);
-                    if (App.game4opacity > 0) {
-                        App.game4opacity = App.game4opacity - 0.2;
-                    }
-                    if (App.playerNumber == App.numberOfPlayers - 1 && App.game4opacity<0.4) {
-                        App.game4final=0;
-                    }
-                    
-                    $("#gameArea .groteKnop").css("opacity", App.game4opacity);
-                }, 1000);
-            }
-            //alert(App.playerNumber,App.mySocketId);
-            //game1
-            $(".knopContainer").html("");
-            for (var i = 0; i < App.numberOfPlayers; i++){
-                $(".knopContainer").append("<div class='knop knop"+(i+1)+"' knopnr="+(i+1)+"></div>");
-            }
-              //game6
-              $(".game6container").html("");
-              $('.vraagAfbeelding, .background').css('background-image', 'url(https://remoteteambuilding.nl/achter/' + App.vragenJSON[App.vraagnummer].Achtergrond + ')');
-
-              for (var i = 0; i < App.numberOfPlayers; i++){
-                App.stukjesX[i]=Math.random()*200;
-                App.stukjesY[i]=Math.random()*200;
-                $(".game6container").append("<div class='stukje stukje"+(i)+"' stukjenr="+(i)+" style='background-size:100%;background-position:0px -"+((425/App.numberOfPlayers)*i)+"px; width:490px; height:"+(425/App.numberOfPlayers/0.7)+"px;'>"+(i+1)+"</div>");
-              }
-            //game2
-            if (App.targetPlayer != App.playerNumber) {
-                var aantalHintGevers = App.numberOfPlayers - 1;
-                var hintGeverNumber = App.targetPlayer < App.playerNumber ? App.playerNumber - 1:App.playerNumber;
-                $('.point').addClass(hintGeverNumber >= Math.floor(aantalHintGevers / 2) ? "vertiPoint" : "horiPoint");
-                if (hintGeverNumber == aantalHintGevers-1 ||hintGeverNumber == 0) {
-                    $('.point').each(function () { $(this).html($(this).attr('pointnr'));});
+                App.targetPlayer = data.targetPlayer;
+                console.log('targetPlayer', App.targetPlayer);
+                if (App.targetPlayer != App.numberOfPlayers - 1) {
+                    App.mazePlayer = App.targetPlayer + 1;
+                
+                } else {
+                    App.mazePlayer = 0;
                 }
+                App.playerNumber = App.players.indexOf(App.mySocketId);
+                if (App.playerNumber > 0) {
+                    var k = setInterval(function () {
+                        //  console.log(App.game4opacity);
+                        if (App.game4opacity > 0) {
+                            App.game4opacity = App.game4opacity - 0.2;
+                        }
+                        if (App.playerNumber == App.numberOfPlayers - 1 && App.game4opacity < 0.4) {
+                            App.game4final = 0;
+                        }
+                        if (App.game7opacity > 0) {
+                            App.game7opacity = App.game7opacity - 0.2;
+                        }
+                        if (App.playerNumber == App.numberOfPlayers - 1 && App.gam7opacity < 0.4) {
+                            App.game7final = 0;
+                        }
+                        if (App.vragenJSON[App.vraagnummer].Vraag == 'game7') {
+                            $("#gameArea .groteKnop").css("opacity", App.game7opacity);
+
+                        }
+                        if (App.vragenJSON[App.vraagnummer].Vraag == 'game4') {
+                            $("#gameArea .groteKnop").css("opacity", App.game4opacity);
+                        }
+                    }, 1000);
+                    
+                }
+               
+                //alert(App.playerNumber,App.mySocketId);
+                //game1
+                $(".knopContainer").html("");
+                for (var i = 0; i < App.numberOfPlayers; i++) {
+                    $(".knopContainer").append("<div class='knop knop" + (i + 1) + "' knopnr=" + (i + 1) + "></div>");
+                }
+                //game6
+           
+                $(".game6container").html("");
+                for (var i = 0; i < App.numberOfPlayers; i++) {
+                    App.stukjesX[i] = Math.random() * 200;
+                    App.stukjesY[i] = Math.random() * 200;
+                    $(".game6container").append("<div class='stukje stukje" + (i) + "' stukjenr=" + (i) + " style='background-size:100%;background-position:0px -" + ((425 / App.numberOfPlayers) * i) + "px; width:490px; height:" + (425 / App.numberOfPlayers / 0.7) + "px;'></div>");
+                }
+                //game2
+                if (App.targetPlayer != App.playerNumber) {
+                    var aantalHintGevers = App.numberOfPlayers - 1;
+                    var hintGeverNumber = App.targetPlayer < App.playerNumber ? App.playerNumber - 1 : App.playerNumber;
+                    $('.point').addClass(hintGeverNumber >= Math.floor(aantalHintGevers / 2) ? "vertiPoint" : "horiPoint");
+                    if (hintGeverNumber == aantalHintGevers - 1 || hintGeverNumber == 0) {
+                        $('.point').each(function () { $(this).html($(this).attr('pointnr')); });
+                    }
                 } else {
                     $('.point').addClass('targetPoint');
                     $('.game2container').addClass('targetContainer');
                 }
-            //game3
-            for (var x = 0; x < 10; x++){
-                for (var y = 0; y < 10; y++) {
-                    $('.game3container .maze').append("<div class='"+(App.maze[x][y]==1?'muur':'open')+"'></div>");
-                }
+                //game3
+                for (var x = 0; x < 10; x++) {
+                    for (var y = 0; y < 10; y++) {
+                        $('.game3container .maze').append("<div class='" + (App.maze[x][y] == 1 ? 'muur' : 'open') + "'></div>");
+                    }
 
+                }
+                $('.game3container .mazeplayer').css('left', App.game3position[0] * 15 + "px").css('top', App.game3position[1] * 15 + "px");
+                var knopPlayer = 0;
+                var richting = ['up', 'down', 'right', 'left'];
+                for (var t = 0; t < 4; t++) {
+                    if (App.playerNumber == knopPlayer) {
+                        $('.game3container').append("<div class='mazeknop' richting='" + richting[t] + "'>" + richting[t] + "</div>");
+                    }
+                    knopPlayer++;
+                    if (knopPlayer >= App.numberOfPlayers) {
+                        knopPlayer = 0;
+                    }
+                }
+                //game5
+                for (var x = 0; x < 16; x++) {
+                    for (var y = 0; y < 27; y++) {
+                        $('.game5container .maze').append("<div class='" + (App.maze1[x][y] == 1 ? 'muur' : 'open') + "'></div>");
+                    }
+
+                }
+                $('.game5container .mazeplayer').css('left', App.game5position[0] * 15 + "px").css('top', App.game5position[1] * 15 + "px");
+                var knopPlayer = 0;
+                var richting = ['up', 'down', 'right', 'left'];
+                for (var t = 0; t < 4; t++) {
+                    if (App.playerNumber == knopPlayer) {
+                        $('.game5container').append("<div class='mazeknop' richting='" + richting[t] + "'></div>");
+                    }
+                    knopPlayer++;
+                    if (knopPlayer >= App.numberOfPlayers) {
+                        knopPlayer = 0;
+                    }
+                }
+                //game4
+                if (App.playerNumber == 0) {
+                    App.game4opacity = 1;
+                } else {
+                    App.game4opacity = 0;
+                }
+                //game7
+                if (App.playerNumber == 0) {
+                    App.game7opacity = 1;
+                } else {
+                    App.game7opacity = 0;
+                }
+                $('.extraknoppen').show();
+                $('.tijdScore').show();
+                $("#gameArea").html("<div class=herego>Here we go!</div>");
+                var opacity = 2;
+                var intro = setInterval(function () {
+                    opacity -= 0.01
+                    $('.herego').css('opacity', 0);
+
+                    window.radius += 0.002 * window.innerWidth;
+                    if (window.radius > window.innerWidth * 1.2) {
+                        App.startVraag();
+                        $('body').css('background-color', '#894894');
+                        $("canvas").prependTo(".overlay");
+                        $('.background canvas').remove();
+
+
+                        $('.background').addClass('postIntro');
+                        clearInterval(intro);
+                        window.radius = window.innerHeight / 3;
+
+                    }
+                }, 10);
             }
-            $('.game3container .mazeplayer').css('left', App.game3position[0] * 30 + "px").css('top', App.game3position[1] * 30 + "px");
-            var knopPlayer = 0;
-            var richting = ['up', 'down', 'right', 'left'];
-            for (var t = 0; t < 4; t++) {
-                if(App.playerNumber==knopPlayer){
-                    $('.game3container').append("<div class='mazeknop' richting='"+richting[t]+"'>"+richting[t]+"</div>");
-                }
-                knopPlayer++;
-                if (knopPlayer >= App.numberOfPlayers) {
-                    knopPlayer = 0;
-                }
-            }
-               //game5
-               for (var x = 0; x < 10; x++){
-                for (var y = 0; y < 10; y++) {
-                    $('.game5container .maze').append("<div class='"+(App.maze1[x][y]==1?'muur':'open')+"'></div>");
-                }
-
-            }
-            $('.game5container .mazeplayer').css('left', App.game5position[0] * 30 + "px").css('top', App.game5position[1] * 30 + "px");
-            var knopPlayer = 0;
-            var richting = ['up', 'down', 'right', 'left'];
-            for (var t = 0; t < 4; t++) {
-                if(App.playerNumber==knopPlayer){
-                    $('.game5container').append("<div class='mazeknop' richting='"+richting[t]+"'></div>");
-                }
-                knopPlayer++;
-                if (knopPlayer >= App.numberOfPlayers) {
-                    knopPlayer = 0;
-                }
-            }
-            //game4
-            if (App.playerNumber == 0) {
-                App.game4opacity = 1;
-            } else {
-                App.game4opacity = 0;
-            }
-            $('.extraknoppen').show();
-            $('.tijdScore').show();
-            $("#gameArea").html("<div class=herego>Here we go!</div>");
-            var opacity = 2;
-            var intro = setInterval(function () {
-                opacity-=0.01
-                $('.herego').css('opacity',0);
-
-                window.radius += 0.002 * window.innerWidth;
-                if (window.radius > window.innerWidth * 1.2) {
-                     App.startVraag();
-                    $('body').css('background-color', '#894894');
-                    $("canvas").prependTo(".overlay");
-                    $('.background canvas').remove();
-
-
-                    $('.background').addClass('postIntro');
-                    clearInterval(intro);
-                    window.radius = window.innerHeight / 3;
-
-            }}, 10);
-          //  $('#gameArea').html($('.game1').html());
-          },
-          playerPressedKnop : function(data) {
+            //  $('#gameArea').html($('.game1').html());
+        },
+        playerPressedKnop: function (data) {
             App.Player.someonePressedKnop(data);
-            console.log('playerPressedKnop',data);
+            console.log('playerPressedKnop', data);
         },
         countdown: function (data) {
-           // console.log('tijd: ' + data);
+            // console.log('tijd: ' + data);
             $('.tijdScore .tijd').html(new Date(data * 1000).toISOString().substr(11, 8));
             $('.tijdScore .score').html(App.score);
         },
@@ -280,10 +307,18 @@ jQuery(function($){
             confetti();
         },
         klikGameClicked: function (data) {
-            if (data.klik == App.playerNumber - 1) {
-                App.game4opacity = 1;
+            if (App.vragenJSON[App.vraagnummer].Vraag == "game4") {
+                if (data.klik == App.playerNumber - 1) {
+                    App.game4opacity = 1;
 
-              }
+                }
+            }
+            if (App.vragenJSON[App.vraagnummer].Vraag == "game7") {
+                if (data.klik == App.playerNumber - 1) {
+                    App.game7opacity = 1;
+
+                }
+            }
           },
         playerPressedTarget : function(data) {
             $('#gameArea .point:first-of-type').remove();
@@ -301,11 +336,11 @@ jQuery(function($){
         newPlayerPosition: function (data) {
             if (App.vragenJSON[App.vraagnummer].Vraag == "game5") {
                 App.game5position = data.newPosition;
-                $('#gameArea .mazeplayer').css('left', App.game5position[0] * 30 + "px").css('top', App.game5position[1] * 30 + "px");
+                $('#gameArea .mazeplayer').css('left', App.game5position[0] * 15 + "px").css('top', App.game5position[1] * 15 + "px");
 
             } else {
                 App.game3position = data.newPosition;
-                $('#gameArea .mazeplayer').css('left', App.game3position[0] * 30 + "px").css('top', App.game3position[1] * 30 + "px");
+                $('#gameArea .mazeplayer').css('left', App.game3position[0] * 15 + "px").css('top', App.game3position[1] * 15 + "px");
 
             }
             
@@ -366,38 +401,49 @@ jQuery(function($){
         huidigeVideo:'',
         game4final:0,
         game4opacity: 0,
+        game7final:0,
+        game7opacity: 0,
         stukjesX: [1000,0,0,0,0,0,0,0,0,0,0,0,0],
-        stukjesY:[1000,0,0,0,0,0,0,0,0,0,0,0,0],
+        stukjesY: [1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        puzzelgoed: false,
+        
         maze: [
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,0,0,0,1,0,0,0,1,1],
-            [1,0,1,0,0,0,1,0,0,0],
-            [1,0,1,1,1,1,1,1,1,1],
-            [1,0,0,0,0,0,0,0,0,1],
-            [1,1,1,1,1,1,1,1,0,1],
-            [1,0,0,0,1,0,0,0,0,1],
-            [1,0,1,0,0,0,1,0,1,1],
-            [1,0,1,0,1,1,1,0,1,1],
-            [1,1,1,1,1,1,1,1,1,1]],
-            maze1: [
-                [1,1,1,1,1,1,1,1,1,1],
-                [1,0,0,0,1,0,0,0,0,1],
-                [1,1,1,0,1,0,1,1,0,1],
-                [1,0,0,0,1,0,1,0,0,1],
-                [1,0,1,1,1,0,1,0,1,1],
-                [1,0,0,0,0,0,1,0,0,1],
-                [1,1,1,1,1,1,1,1,0,1],
-                [0,0,0,1,0,0,0,1,0,1],
-                [1,1,0,0,0,1,0,0,0,1],
-                [1,1,1,1,1,1,1,1,1,1]],
-            game3position:[1,8],
-            game5position:[1,1],
+            [0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,1,1,1,0,0,0],
+[0,0,1,1,0,0,0,1,1,0],
+[0,1,0,0,0,1,0,0,0,1],
+[1,0,0,1,1,0,1,1,0,1],
+[1,0,1,1,0,0,0,1,0,0],
+[1,0,0,0,0,1,0,1,0,1],
+[0,1,1,0,1,0,0,0,1,0],
+[0,0,0,1,1,0,1,1,0,0],
+[0,0,0,0,0,1,0,0,0,0]],
+            maze1: 
+            [[0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,1,1,1,1,1,0,1,0,1,0,0,0,1,1,1,1,1,1,0,0,0,0],
+            [0,0,0,1,1,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,1,0,0],
+            [0,0,1,0,1,0,1,0,0,0,1,0,0,1,0,1,0,1,1,0,0,0,1,0,0,1,0],
+            [0,1,0,0,0,0,1,1,1,1,0,0,1,0,0,1,0,1,0,1,1,0,1,1,1,1,1],
+            [0,1,0,1,1,1,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,1,0,1,0,0,0],
+            [1,0,0,0,0,0,1,0,1,1,1,0,0,1,1,0,1,0,0,1,1,0,0,0,1,0,1],
+            [1,0,1,1,1,1,1,0,0,0,1,0,1,1,0,0,0,0,1,1,1,0,1,0,1,0,1],
+            [1,0,0,0,0,0,1,1,1,0,1,0,0,1,0,1,1,1,0,1,1,0,1,0,1,0,1],
+            [1,0,1,1,1,0,0,1,0,0,1,1,0,1,0,1,0,0,0,1,1,0,1,0,1,0,1],
+            [1,0,1,0,0,0,1,1,1,0,0,0,0,1,0,0,0,1,0,1,0,0,1,0,0,0,1],
+            [1,0,0,1,0,1,0,0,0,1,0,1,1,1,1,1,1,1,0,1,0,1,0,0,1,1,0],
+            [0,1,1,1,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,1,0,1,0,1,0,0,0],
+            [0,0,0,0,1,1,1,0,1,0,0,0,1,1,1,0,0,1,0,0,0,1,0,1,0,0,0],
+            [0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0]],
+            game3position:[5,8],
+            game5position:[16,14],
             game2targetNr:1,
         game1finished: false,
         game2finished: false,
         game4finished: false,
+        game7finished: false,
         numberOfPlayers: 0,
-        targetPlayer: 0,
+        targetPlayer: -1,
         mazePlayer: 0,
         vraagnummer:0,
         gameId: '',
@@ -452,6 +498,21 @@ jQuery(function($){
             console.log(App.vragenJSON[App.vraagnummer]);
             if (App.vragenJSON[App.vraagnummer].Soort == 'game') {
                 $('#gameArea').html($('.' + App.vragenJSON[App.vraagnummer].Vraag).html());
+           if (App.vragenJSON[App.vraagnummer].Vraag == 'game6') {
+                    $('body').css('background-color', "hsl(" + Math.random() * 255 + ",70%,25%)");
+        
+                      $('.background').css('background-image', 'url(https://remoteteambuilding.nl/achter/' + App.vragenJSON[App.vraagnummer].Achtergrond + ')');
+           }
+         
+                if (App.vragenJSON[App.vraagnummer].Vraag == 'game7') {
+                    $('#gameArea .groteKnopContainer').css('background-image','url(lucht.svg)');
+                    App.animatie = setInterval(() => { $('.konijn1').each(function () { $(this).css('left', Math.random() * 90 + "vw").css('top', Math.random() * 90 + "vh"); }); }, 1000);
+
+                }
+                if (App.vragenJSON[App.vraagnummer].Vraag == 'game4') {
+                    $('#gameArea .groteKnopContainer').css('background-image','url(groen.svg)');
+                    App.animatie = setInterval(() => { $('.konijn').each(function () { $(this).css('left', Math.random() * 90 + "vw").css('top', Math.random() * 90 + "vh"); }); }, 1000);
+                }
                 
             } else {
                 $('body').css('background-color', "hsl(" + Math.random() * 255 + ",70%,25%)");
@@ -679,7 +740,7 @@ jQuery(function($){
                             newPosition: [App.game5position[0] - ($(this).attr('richting') == 'left' ? 1 : 0) + ($(this).attr('richting') == 'right' ? 1 : 0), App.game5position[1] - ($(this).attr('richting') == 'up' ? 1 : 0) + ($(this).attr('richting') == 'down' ? 1 : 0)]
                         }
                         console.log(data)
-                        if (data.newPosition[0] == 0 && data.newPosition[1] == 7) {
+                        if (data.newPosition[0] == 26 && data.newPosition[1] == 5) {
                             data.uitkomst = "goed";
                             App.Player.updateStatus(data);
 
@@ -708,7 +769,7 @@ jQuery(function($){
                             newPosition: [App.game3position[0] - ($(this).attr('richting') == 'left' ? 1 : 0) + ($(this).attr('richting') == 'right' ? 1 : 0), App.game3position[1] - ($(this).attr('richting') == 'up' ? 1 : 0) + ($(this).attr('richting') == 'down' ? 1 : 0)]
                         }
                         console.log(data)
-                        if (data.newPosition[0] == 9 && data.newPosition[1] == 2) {
+                        if (data.newPosition[0] == 9 && data.newPosition[1] == 5) {
                             data.uitkomst = "goed";
                             App.Player.updateStatus(data);
 
@@ -734,26 +795,27 @@ jQuery(function($){
 
             },
             onMouseMove: function (event) {
-                if (!wait) {
-                    // fire the event
-                    var data = {
-                        gameId: App.gameId,
-                        player:App.playerNumber,
-                        x: event.pageX,
-                    y:event.pageY
+                if (!App.puzzelgoed) {
+                    if (!wait) {
+                        // fire the event
+                        var data = {
+                            gameId: App.gameId,
+                            player: App.playerNumber,
+                            x: event.pageX,
+                            y: event.pageY
                     
-}
-                    IO.socket.emit('stukjeMoved', data);
+                        }
+                        IO.socket.emit('stukjeMoved', data);
  
-                    // stop any further events
-                    wait = true;
-                    // after a fraction of a second, allow events again
-                    setTimeout(function () {
-                        wait = false;
-                    }, 1000 / timesPerSecond);
-                } 
-                $("#gameArea .stukje" + App.playerNumber).css("left", event.pageX + "px").css("top", event.pageY + "px");
-
+                        // stop any further events
+                        wait = true;
+                        // after a fraction of a second, allow events again
+                        setTimeout(function () {
+                            wait = false;
+                        }, 1000 / timesPerSecond);
+                    }
+                    $("#gameArea .stukje" + App.playerNumber).css("left", event.pageX + "px").css("top", event.pageY + "px");
+                }
             },
             someoneMovedStukje: function (data) {
                
@@ -785,36 +847,78 @@ jQuery(function($){
                         data.uitkomst = "goed";
                        
 
-                        IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
+                        IO.socket.emit('puzzelgoed', data);
+                    setTimeout(() => { IO.socket.emit('playerPressedAntwoordDoorvoeren', data);},2000);
+                        
                 }
             },
 
             onGroteClick: function () {
-                if ($(this).css('opacity') > 0.4) {
-                    $(this).css('margin-left', Math.random() * 70 + "vw");
-                    $(this).css('margin-top', Math.random() * 70 + "vh");
-                    var data = {
-                        gameId: App.gameId,
-                        klik: App.playerNumber
-                    }
+                if (App.vragenJSON[App.vraagnummer].Vraag == 'game7') {
+                    if ($(this).css('opacity') > 0.4) {
+                        $(this).addClass('bounce');
+                        $(this).css('margin-left', Math.random() * 70 + "vw");
+                        $(this).css('margin-top', Math.random() * 70 + "vh");
+                        var data = {
+                            gameId: App.gameId,
+                            klik: App.playerNumber
+                        }
               
                 
-                    if (App.game4final > 10 && !App.game4finished) {
-                        App.game4finished = true;
-                        data.uitkomst = "goed";
-                       
-                        App.Player.updateStatus(data);
+                        if (App.game7final > 10 && !App.game7finished) {
+                            App.game7finished = true;                            
+                            data.uitkomst = "goed";
+                            clearInterval(App.animatie);
+                            App.Player.updateStatus(data);
 
-                        IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
+                            IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
 
-                    } else {
-                        if (App.playerNumber == App.numberOfPlayers - 1) {
-                            App.game4final++;
                         } else {
-                            IO.socket.emit('klikGame', data);
+                            if (App.playerNumber == App.numberOfPlayers - 1) {
+                                App.game4final++;
+                            } else {
+                                IO.socket.emit('klikGame', data);
+
+                            }
 
                         }
+                        setTimeout(() => {
+                            $(this).removeClass('bounce');
+                        }, 1000);
+                    }
+                } else {
+                    if ($(this).css('opacity') > 0.4) {
+                        $(this).addClass('bounce');
+                        $(this).css('margin-left', Math.random() * 70 + "vw");
+                        $(this).css('margin-top', Math.random() * 70 + "vh");
+                        var data = {
+                            gameId: App.gameId,
+                            klik: App.playerNumber
+                        }
+              
+                
+                        if (App.game4final > 10 && !App.game4finished) {
+                            App.game4finished = true;
+                            clearInterval(App.animatie);
 
+                            data.uitkomst = "goed";
+                       
+                            App.Player.updateStatus(data);
+
+                            IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
+
+                        } else {
+                            if (App.playerNumber == App.numberOfPlayers - 1) {
+                                App.game4final++;
+                            } else {
+                                IO.socket.emit('klikGame', data);
+
+                            }
+
+                        }
+                        setTimeout(() => {
+                            $(this).removeClass('bounce');
+                        }, 1000);
                     }
                 }
                
