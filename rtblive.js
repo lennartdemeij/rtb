@@ -20,7 +20,12 @@ exports.initGame = function (sio, socket) {
     gameSocket.on('klikGame', klikGame);
     gameSocket.on('stukjeMoved', stukjeMoved);
     gameSocket.on('puzzelgoed', puzzelgoed);
+    gameSocket.on('reconnect', reconnect);
 };
+function reconnect(data) {
+    sock.join(data.gameId);
+}
+
 function playerJoinGame(data) {
     console.log('Player ' + data.playerName + 'attempting to join game: ' + data.gameId );
     var sock = this;

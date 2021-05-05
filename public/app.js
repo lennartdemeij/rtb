@@ -39,6 +39,11 @@ jQuery(function($){
                     reconnectionAttempts: Infinity
                 });
                 IO.bindEvents();
+                var data = {
+                    gameId: App.gameId,
+                   
+                };
+                    IO.socket.emit('reconnect', data);
 
             });
             IO.socket.on('connected', IO.onConnected);
