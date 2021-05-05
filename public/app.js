@@ -593,7 +593,7 @@ jQuery(function($){
             console.log(App.vragenJSON[App.vraagnummer]);
             if (App.vragenJSON[App.vraagnummer].Soort == 'game') {
                 $('#gameArea').html($('.' + App.vragenJSON[App.vraagnummer].Vraag).html());
-           if (App.vragenJSON[App.vraagnummer].Vraag == 'game6') {
+           if (App.vragenJSON[App.vraagnummer].Vraag == 'game6' ||App.vragenJSON[App.vraagnummer].Vraag == 'game3' ||App.vragenJSON[App.vraagnummer].Vraag == 'game5') {
                     $('body').css('background-color', "hsl(" + Math.random() * 255 + ",70%,25%)");
         
                       $('.background').css('background-image', 'url(https://remoteteambuilding.nl/achter/' + App.vragenJSON[App.vraagnummer].Achtergrond + ')');
