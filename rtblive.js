@@ -23,6 +23,8 @@ exports.initGame = function (sio, socket) {
     gameSocket.on('reconnect', reconnect);
 };
 function reconnect(data) {
+    var sock = this;
+
     sock.join(data.gameId);
 }
 
