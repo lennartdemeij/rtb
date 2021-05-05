@@ -38,6 +38,8 @@ jQuery(function($){
                     reconnectionDelayMax : 5000,
                     reconnectionAttempts: Infinity
                 });
+                IO.bindEvents();
+
             });
             IO.socket.on('connected', IO.onConnected);
             // IO.socket.on('newGameCreated', IO.onNewGameCreated );
@@ -1114,7 +1116,7 @@ jQuery(function($){
 
                     window.filly = "#08c768";
                 } else if (uitkomst == 'skip') {
-                    $("#skip1")[0].play();
+                    $("#skip2")[0].play();
 
                     uitkomsttekst = "Skipped";
 
@@ -1139,6 +1141,10 @@ jQuery(function($){
     IO.init();
     App.init();
 
+    $("body").on("click", ".btn", function () {
+                $("#klik1")[0].play();
+
+    });
 
     ////client functions
     $("body").on("click", ".muziek", function () {
