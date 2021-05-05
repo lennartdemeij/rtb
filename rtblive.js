@@ -112,7 +112,7 @@ function playersPressedStart(data) {
             clearInterval(interval);
 
         }
-        console.log('timer '+remaining);
+      //  console.log('timer '+remaining);
     }, 1000);
 
 
