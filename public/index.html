@@ -254,7 +254,8 @@ margin:10px;
         .knopactief{
             background-color:#0f0;
         }
-        .vraagAfbeelding {background-size: cover;
+        .vraagAfbeelding {background-size: contain;
+        background-repeat: no-repeat;
             background-color:#deb7e4;
             background-position: center center;
     width: calc(100vw - 400px);
@@ -443,8 +444,8 @@ width:100vw;}
     filter:drop-shadow(0px 0px 10px #000000aa);
 }
 
-.maze1 .mazeknop:before{
-    display:none !important;
+.game5container .mazeknop:before {
+display: none !important;
 }
 .groteKnop{
     transition: 0.6s;
