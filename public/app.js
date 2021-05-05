@@ -584,7 +584,7 @@ jQuery(function($){
                  $.ajax({
                     method: "POST",
             
-                     data: {code:$('#inputGameId').val()},
+                     data: {code:$('#inputGameId').val().toLowerCase()},
                     url: 'https://remoteteambuilding.nl/registreerspeler.php',
                      success: function (dat) {
                          if (dat != "bestaatniet") {
@@ -594,7 +594,7 @@ jQuery(function($){
                              if (wat[3] == 'aangemaakt') {
                                  $('#playerWaitingMessage').html('Player joined, press start when everyone is here.');
                                  var data = {
-                                     gameId: ($('#inputGameId').val()),
+                                     gameId: ($('#inputGameId').val().toLowerCase()),
                                      playerName: $('#inputPlayerName').val() || 'NoName'
                                  };
                                
@@ -635,7 +635,7 @@ jQuery(function($){
                 console.log('Player clicked "Start"');
                  $('.startButtonCont').hide();
                  var data = {
-                    gameId: ($('#inputGameId').val()),
+                    gameId: ($('#inputGameId').val().toLowerCase()),
                      playerName: $('#inputPlayerName').val() || 'NoName',
                     totalTime:App.totalTime
                  };
