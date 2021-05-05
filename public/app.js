@@ -13,7 +13,12 @@ jQuery(function($){
     var IO = {
 
         init: function () {
-            IO.socket = io.connect();
+            IO.socket = io.connect({
+                reconnection: true,
+                reconnectionDelay: 1000,
+                reconnectionDelayMax : 5000,
+                reconnectionAttempts: Infinity
+              });
          
             IO.bindEvents();
             
@@ -27,8 +32,13 @@ jQuery(function($){
                     delete IO.socket;
                     IO.socket = null;
                 }
-                io.connect();
-              });
+                IO.socket = io.connect({
+                    reconnection: true,
+                    reconnectionDelay: 1000,
+                    reconnectionDelayMax : 5000,
+                    reconnectionAttempts: Infinity
+                });
+            });
             IO.socket.on('connected', IO.onConnected);
             // IO.socket.on('newGameCreated', IO.onNewGameCreated );
             IO.socket.on('playerJoinedRoom', IO.playerJoinedRoom);
