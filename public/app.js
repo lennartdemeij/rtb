@@ -211,7 +211,7 @@ jQuery(function($){
                         if (App.game7opacity > 0) {
                             App.game7opacity = App.game7opacity - 0.2;
                         }
-                        if (App.playerNumber == App.numberOfPlayers - 1 && App.gam7opacity < 0.4) {
+                        if (App.playerNumber == App.numberOfPlayers - 1 && App.game7opacity < 0.4) {
                             App.game7final = 0;
                         }
                         if (App.vragenJSON[App.vraagnummer].Vraag == 'game7') {
