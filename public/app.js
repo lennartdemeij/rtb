@@ -337,7 +337,35 @@ jQuery(function($){
         },
         finished: function (data) {
             $("#win")[0].play();
-
+            $("body").append(`<style>.extraknoppen {
+                position: absolute;
+                left: 0px;
+                top: 60px;
+                width: 400px;
+                padding: 60px calc(50vw - 200px);
+            }
+            
+            
+            table {width: 380px !important;}
+            table *{font-size:16px !important}
+            
+            
+            .tussenscorescontent {
+                width: 100%;
+                height: auto !important;
+                max-height: calc(100vh - 400px);
+            }
+            *{
+                pointer-events:none !important;
+            }
+            .vraagAfbeelding,input,.btnCont,.tijd{
+                display:none !important;
+            }
+            .popup *{
+                display:block !important;
+                pointer-events: all !important;
+            }
+            `);
             confetti();
         },
         klikGameClicked: function (data) {
@@ -522,7 +550,7 @@ jQuery(function($){
             App.$doc.on('click', '.antwoordDoorvoeren',App.Player.onAntwoordDoorvoeren);
             App.$doc.on('click', '.mazeknop',App.Player.onMazeClick);
             App.$doc.on('click', '.groteKnop',App.Player.onGroteClick);
-            App.$doc.on('click', '.groteKnopContainer',App.Player.onGroteContainerClick);
+            App.$doc.on('click', '.konijn, .konijn1',App.Player.onGroteContainerClick);
             App.$doc.on('click', '.targetContainer', App.Player.onMisClick);
 
             App.$doc.on('mousemove', '.game6container', App.Player.onMouseMove);
@@ -531,6 +559,35 @@ jQuery(function($){
         startVraag: function () {
             if (!App.vragenJSON[App.vraagnummer]) {
                 confetti();
+                $("#win")[0].play();
+                $("body").append(`<style>.extraknoppen {
+                    position: absolute;
+                    left: 0px;
+                    top: 60px;
+                    width: 400px;
+                    padding: 60px calc(50vw - 200px);
+                }
+                
+                
+                table {width: 380px !important;}
+                table *{font-size:16px !important}
+                
+                
+                .tussenscorescontent {
+                    width: 100%;
+                    height: auto !important;
+                    max-height: calc(100vh - 400px);
+                }
+                *{
+                    pointer-events:none !important;
+                }
+                .vraagAfbeelding,input,.btnCont,.tijd{
+                    display:none !important;
+                }
+                .popup *{
+                    display:block !important;
+                    pointer-events: all !important;
+                }`);
                 return;
             }
             console.log(App.vragenJSON[App.vraagnummer]);
@@ -903,7 +960,7 @@ jQuery(function($){
                         }
               
                 
-                        if (App.game7final > 10 && !App.game7finished) {
+                        if (App.game7final > 4 && !App.game7finished &&App.playerNumber==App.numberOfPlayers-1) {
                             App.game7finished = true;                            
                             data.uitkomst = "goed";
                             clearInterval(App.animatie);
@@ -913,7 +970,7 @@ jQuery(function($){
 
                         } else {
                             if (App.playerNumber == App.numberOfPlayers - 1) {
-                                App.game4final++;
+                                App.game7final++;
                             } else {
                                 IO.socket.emit('klikGame', data);
 
@@ -935,7 +992,7 @@ jQuery(function($){
                         }
               
                 
-                        if (App.game4final > 10 && !App.game4finished) {
+                        if (App.game4final > 4 && !App.game4finished &&App.playerNumber==App.numberOfPlayers-1) {
                             App.game4finished = true;
                             clearInterval(App.animatie);
 

@@ -262,14 +262,17 @@ margin:10px;
     background-position: center center;
     width: calc(100vw - 400px);
     height: calc((100vw - 400px) / 2);
+    max-height: calc(100vh - 300px);
+    max-width: calc(2* (100vh - 300px));
     margin: 50px;
     position: relative;
     border-radius: 10px;
     border-bottom: 4px solid #deb7e4;
     transition: 0.4s;
     transform-style: preserve-3d;
-    margin-top: calc(0.5 * ((100vh - 300px) - ((100vw - 400px)/2)));
-}
+    margin-top: 60px;
+    
+    }
 .vraagAfbeelding:hover {
     transform: rotateX(-5deg) rotateY(5deg);
 }
@@ -701,8 +704,10 @@ clip-path: polygon(50% 0%, 100% 30%, 100% 100%, 50% 70%, 0 100%, 0 30%);
     margin-top: 99px;
     }
     .videoKnop iframe {
-    height: calc(100vh - 300px);
-    width: calc(100vw - 400px);
+        width: calc(100vw - 400px);
+    height: calc((100vw - 400px) / 2);
+    max-height: calc(100vh - 300px);
+    max-width: calc(2* (100vh - 300px));
 }
 .videoKnop{
     background:#000;
