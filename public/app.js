@@ -9,14 +9,26 @@ jQuery(function($){
     var gameOpbrengst = 200;
     var timesPerSecond = 5; // how many times to fire the event per second
     var wait = false;
+    
     var IO = {
 
         init: function () {
             IO.socket = io.connect();
+         
             IO.bindEvents();
+            
         },
 
         bindEvents: function () {
+            IO.socket.on("disconnect", () => {
+                console.log('VERBINDING VERBROKEN, FF NOG EEN KEER PROBEREN!');
+                if (IO.socket) {
+                    IO.socket.destroy();
+                    delete IO.socket;
+                    IO.socket = null;
+                }
+                io.connect();
+              });
             IO.socket.on('connected', IO.onConnected);
             // IO.socket.on('newGameCreated', IO.onNewGameCreated );
             IO.socket.on('playerJoinedRoom', IO.playerJoinedRoom);
@@ -47,6 +59,7 @@ jQuery(function($){
         },
         playerJoinedRoom: function (data) {
             console.log('hooi', data);
+            $("#join")[0].play();
             App.numberOfPlayers = data.numberOfPlayers;
             console.log('room', data.room)
             
@@ -158,6 +171,8 @@ jQuery(function($){
             if (App.targetPlayer > -1) {
                 console.log('al gestart!')
             } else {
+                $("#start")[0].play();
+
                 App.targetPlayer = data.targetPlayer;
                 console.log('targetPlayer', App.targetPlayer);
                 if (App.targetPlayer != App.numberOfPlayers - 1) {
@@ -304,6 +319,8 @@ jQuery(function($){
             $('.tijdScore .score').html(App.score);
         },
         finished: function (data) {
+            $("#win")[0].play();
+
             confetti();
         },
         klikGameClicked: function (data) {
@@ -320,7 +337,9 @@ jQuery(function($){
                 }
             }
           },
-        playerPressedTarget : function(data) {
+        playerPressedTarget: function (data) {
+            $("#klik1")[0].play();
+
             $('#gameArea .point:first-of-type').remove();
             if (App.targetPlayer == App.playerNumber && $('#gameArea .point').length < 1 && !App.game2finished) {
                 App.game2finished = true;
@@ -381,6 +400,8 @@ jQuery(function($){
            console.log('someonePressedSkip',data);
         },
         someoneGotItWrong: function (data) {
+            $("#fout2")[0].play();
+
             console.log('someoneGotItWrong',data);
 
             App.Player.someoneGotItWrong(data);
@@ -1072,17 +1093,25 @@ jQuery(function($){
                 var uitkomsttekst = "";
 
                 if (uitkomst == 'fout') {
+                    $("#fout1")[0].play();
+
                     uitkomsttekst = "Wrong";
                     window.filly = "#a72346";
                 } else if (uitkomst == 'goed') {
+                    $("#goed1")[0].play();
+
                     uitkomsttekst = "Correct";
 
                     window.filly = "#08c768";
                 } else if (uitkomst == 'skip') {
+                    $("#skip1")[0].play();
+
                     uitkomsttekst = "Skipped";
 
                     window.filly = "#966b90";
                 } else if (uitkomst == 'hint') {
+                    $("#hint")[0].play();
+
                     uitkomsttekst = "Hint";
 
                     window.filly = "#966b90";

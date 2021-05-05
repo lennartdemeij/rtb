@@ -254,17 +254,21 @@ margin:10px;
         .knopactief{
             background-color:#0f0;
         }
-        .vraagAfbeelding {background-size: contain;
-        background-repeat: no-repeat;
-            background-color:#deb7e4;
-            background-position: center center;
+        .vraagAfbeelding {
+            
+            background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #deb7e4;
+    background-position: center center;
     width: calc(100vw - 400px);
-    height: calc(100vh - 300px);
+    height: calc((100vw - 400px) / 2);
     margin: 50px;
-    position:relative;border-radius:10px;
-border-bottom:4px solid #deb7e4;
-transition: 0.4s;
-transform-style: preserve-3d;
+    position: relative;
+    border-radius: 10px;
+    border-bottom: 4px solid #deb7e4;
+    transition: 0.4s;
+    transform-style: preserve-3d;
+    margin-top: calc(0.5 * ((100vh - 300px) - ((100vw - 400px)/2)));
 }
 .vraagAfbeelding:hover {
     transform: rotateX(-5deg) rotateY(5deg);
@@ -868,6 +872,48 @@ clip-path: polygon(50% 0%, 100% 30%, 100% 100%, 50% 70%, 0 100%, 0 30%);
 </div>
 <audio class="audio" id="muziek">
     <source src="" type="audio/mpeg">
+  </audio>
+  <audio class="audio" id="goed1">
+    <source src="./goed1.mp3" type="audio/mpeg">
+  </audio>
+  <audio class="audio" id="goed2">
+    <source src="./goed2.mp3" type="audio/mpeg">
+  </audio>
+  <audio class="audio" id="fout1">
+    <source src="./fout1.mp3" type="audio/mpeg">
+  </audio>
+  <audio class="audio" id="fout2">
+    <source src="./fout2.mp3" type="audio/mpeg">
+  </audio>
+  <audio class="audio" id="fout3">
+    <source src="./fout3.mp3" type="audio/mpeg">
+  </audio>
+  <audio class="audio" id="mis">
+    <source src="./mis.mp3" type="audio/mpeg">
+  </audio>
+  <audio class="audio" id="win">
+    <source src="./win.mp3" type="audio/mpeg">
+  </audio>
+  <audio class="audio" id="start">
+    <source src="./start.mp3" type="audio/mpeg">
+  </audio>
+  <audio class="audio" id="join">
+    <source src="./join.mp3" type="audio/mpeg">
+  </audio>
+  <audio class="audio" id="klik1">
+    <source src="./klik1.mp3" type="audio/mpeg">
+  </audio>
+  <audio class="audio" id="klik2">
+    <source src="./klik2.mp3" type="audio/mpeg">
+  </audio>
+  <audio class="audio" id="hint">
+    <source src="./hint.mp3" type="audio/mpeg">
+  </audio>
+  <audio class="audio" id="skip1">
+    <source src="./skip1.mp3" type="audio/mpeg">
+  </audio>
+  <audio class="audio" id="skip2">
+    <source src="./skip2.mp3" type="audio/mpeg">
   </audio>
 
   <div class='overlay' style='display:none;'><div class='popup'></div></div>
