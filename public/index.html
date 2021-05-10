@@ -140,7 +140,7 @@ input[type="text"] {
 transform-origin: bottom center;
 text-shadow: 0px -2px 1px #ccc;
     color: #333;
-    box-shadow: 0px 20px 0px -10px #deb7e4;
+    box-shadow: 0px 20px 0px -10px #00000077;
 }
 
 .input {
@@ -272,7 +272,7 @@ margin:10px; */
     margin: 50px;
     position: relative;
     border-radius: 10px;
-    border-bottom: 4px solid #deb7e4;
+    border-bottom: 0px solid #deb7e4;
     transition: 0.4s;
     transform-style: preserve-3d;
     margin-top: 60px;
@@ -586,7 +586,7 @@ filter:sepia(0.3);
 .tussenscores:hover{
     transform:rotateY(-30deg);
 }
-.game6container{
+.game6container,.game8container{
     position:relative;
 }
 .stukje{
@@ -756,13 +756,15 @@ clip-path: polygon(50% 0%, 100% 30%, 100% 100%, 50% 70%, 0 100%, 0 30%);
 .live{
     z-index:9998;
 position:absolute;
-right:40px;
-bottom:40px;
+right:80px;
+bottom:60px;
 color:#fff;
 font-size:20px;
 line-height:30px;
 font-weight:bold;
 display: none;
+transform: scale(2);
+    text-shadow: 0px 0px 10px #000;
 }
 
 @keyframes blinker {
@@ -773,7 +775,23 @@ display: none;
 
 
 
+.progressbar{
+    position:absolute;
+    bottom:60px;
+    left:60px;
+    width:600px;
+    height:40px;
+    border-radius: 40px;
+    overflow: hidden;
+    border:4px solid #563088;
 
+}
+.progress{
+    transition:0.4s;
+height:40px;
+background-color:#8053b9;
+width:100px;
+}
 .piano {
   height:300px;
   width:1000px;
@@ -936,6 +954,8 @@ li {
         <li class="white e  knop knop7" knopNr=7></li>
             
       </ul>
+      <div class='progressbar'><div class='progress'></div></div>
+
     </div>
     </div>
 
@@ -979,6 +999,15 @@ li {
     </div>
 
 
+    <div style='display:none;' class=game8>
+        <div class='game8container' style=' width: 100vw;
+        height: 100vh;'>
+          
+       
+     </div>
+    </div>
+
+
     <div style='display:none;' class=game4>
         <div class='groteKnopContainer' style=' width: 100vw; background-size: cover;
         height: 100vh;'>
@@ -987,6 +1016,8 @@ li {
       <div class='konijn'></div>
       <div class='konijn'></div>
       <div class='konijn'></div>
+      <div class='progressbar'><div class='progress'></div></div>
+
     </div>
     </div>
     <div style='display:none;' class=game7>
@@ -997,6 +1028,7 @@ li {
       <div class='konijn1'></div>
       <div class='konijn1'></div>
       <div class='konijn1'></div>
+      <div class='progressbar'><div class='progress'></div></div>
     </div>
     </div>
 
