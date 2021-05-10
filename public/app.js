@@ -227,10 +227,10 @@ jQuery(function($){
                
                 //alert(App.playerNumber,App.mySocketId);
                 //game1
-                $(".knopContainer").html("");
-                for (var i = 0; i < App.numberOfPlayers; i++) {
-                    $(".knopContainer").append("<div class='knop knop" + (i + 1) + "' knopnr=" + (i + 1) + "></div>");
-                }
+                // $(".knopContainer").html("");
+                // for (var i = 0; i < App.numberOfPlayers; i++) {
+                //     $(".knopContainer").append("<div class='knop knop" + (i + 1) + "' knopnr=" + (i + 1) + "></div>");
+                // }
                 //game6
            
                 $(".game6container").html("");
@@ -472,7 +472,9 @@ jQuery(function($){
         stukjesX: [1000,0,0,0,0,0,0,0,0,0,0,0,0],
         stukjesY: [1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         puzzelgoed: false,
-        
+         ac : new (window.AudioContext || window.webkitAudioContext),
+
+        oscs:[],
         maze: [
             [0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,1,1,1,0,0,0],
@@ -517,6 +519,8 @@ jQuery(function($){
         playerNumber: 0,
         mySocketId: '',
         currentRound: 0,
+        freqs: [130.81, 164.81, 196.00, 261.63, 329.63, 392.00, 523.25, 659.25, 783.99],
+
         vragenJSON:'',
         init: function () {
              App.cacheElements();
@@ -592,7 +596,18 @@ jQuery(function($){
             }
             console.log(App.vragenJSON[App.vraagnummer]);
             if (App.vragenJSON[App.vraagnummer].Soort == 'game') {
+                $('.live').show();
                 $('#gameArea').html($('.' + App.vragenJSON[App.vraagnummer].Vraag).html());
+                if (App.vragenJSON[App.vraagnummer].Vraag == 'game1') {
+                    for (var i = 0; i < App.freqs.length; i++){
+                    App.oscs[i]=App.ac.createOscillator();
+                        App.oscs[i].frequency.value = App.freqs[i];
+                        App.oscs[i].connect(App.ac.destination);
+                    }
+
+                        
+            }
+                
            if (App.vragenJSON[App.vraagnummer].Vraag == 'game6' ||App.vragenJSON[App.vraagnummer].Vraag == 'game3' ||App.vragenJSON[App.vraagnummer].Vraag == 'game5') {
                     $('body').css('background-color', "hsl(" + Math.random() * 255 + ",70%,25%)");
         
@@ -610,6 +625,8 @@ jQuery(function($){
                 }
                 
             } else {
+                $('.live').hide();
+
                 $('body').css('background-color', "hsl(" + Math.random() * 255 + ",70%,25%)");
 
                 $('.vraagTekst').html(App.vragenJSON[App.vraagnummer].Vraag);
@@ -1078,9 +1095,30 @@ jQuery(function($){
 
                IO.socket.emit('playerUpKnop', data);
             },
+            someoneUpKnop: function (data) {
+                
+                $('.knop' + data.knopNr).removeClass('knopactief');
+                // for (var i = 0; i < App.oscs.length; i++){
+                //     console.log('stop '+i)
+                // App.oscs[i].stop();
+                // }
+                App.oscs[(parseInt(data.knopNr) - 1)].frequency.value = 0;
+
+
+                
+
+            },
             someonePressedKnop: function (data) {
                 
                 $('.knop' + data.knopNr).addClass('knopactief');
+                $('.knopactief').each(function () {
+                    App.oscs[(parseInt(data.knopNr) - 1)].frequency.value = App.freqs[(parseInt(data.knopNr) - 1)];
+
+                    try {
+                        
+                        App.oscs[(parseInt($(this).attr("knopNr")) - 1)].start(0);
+                    }catch(err){}
+                });
                 if ($('#gameArea .knopactief').length >= App.numberOfPlayers) {
 
                     setTimeout(function () {
@@ -1113,7 +1151,9 @@ jQuery(function($){
                 App.Player.alertData("hint",App.vragenJSON[App.vraagnummer].Hint);
             },
             someonePressedSkip: function (data) {
-                App.score -= skipKosten;
+                if (App.vragenJSON[App.vraagnummer].Soort != 'game') {
+                    App.score -= skipKosten;
+                }
                 App.Player.updateStatus(data);
 
                 App.Player.alertData("skip",App.vragenJSON[App.vraagnummer].Antwoord.split("|")[0]);
@@ -1123,11 +1163,23 @@ jQuery(function($){
 
             },
 
-            someoneUpKnop: function (data) {
-                
-                $('.knop' + data.knopNr).removeClass('knopactief');
-            },
+        
             someonePressedAntwoordDoorvoeren: function (data) {
+                App.Player.alertData(data.uitkomst);
+
+                if (App.vragenJSON[App.vraagnummer].Vraag == 'game1') {
+                    for (var i = 0; i < App.oscs.length; i++) {
+                        console.log('stop ' + i)
+                        try {
+                            App.oscs[parseInt(i)].stop();
+                        } catch (err) { }
+
+                    
+                    }
+                    App.oscs = null;
+                    App.ac = null;
+                }
+
                 if (data.uitkomst == 'goed') {
                     if (App.vragenJSON[App.vraagnummer].Soort == 'game') {
                         App.score += gameOpbrengst;
@@ -1143,7 +1195,6 @@ jQuery(function($){
                 }
                 App.Player.updateStatus(data);
 
-                App.Player.alertData(data.uitkomst);
 
                 console.log(data)
            //     IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
@@ -1219,7 +1270,9 @@ jQuery(function($){
         $("#muziek").trigger($("#muziek").hasClass('staataan') ? 'pause' : 'play').toggleClass('staataan');
     //    $("#muziek")[0].play();
     });
-  
+    $(window).bind('beforeunload', function(){
+        return 'Niet de pagina verlaten als het spel nog niet afgelopen is!';
+      });
 
 
 }($));
