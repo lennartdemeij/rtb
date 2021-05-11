@@ -253,11 +253,11 @@ margin:10px; */
         }
         .knopactief{
             /* background-color:#0f0; */
-            border-top:1px solid #777;
-  border-left:1px solid #999;
-  border-bottom:1px solid #999;
-  box-shadow:2px 0 3px rgba(0,0,0,0.1) inset,-5px 5px 20px rgba(0,0,0,0.2) inset,0 0 3px rgba(0,0,0,0.2);
-  background:linear-gradient(to bottom,#fff 0%,#e9e9e9 100%)
+            border-top:1px solid #777 !important;
+  border-left:1px solid #999 !important;
+  border-bottom:1px solid #999 !important;
+  box-shadow:2px 0 3px rgba(0,0,0,0.1) inset,-5px 5px 20px rgba(0,0,0,0.2) inset,0 0 3px rgba(0,0,0,0.2) !important;
+  background:linear-gradient(to bottom,#fff 0%,#e9e9e9 100%) !important;
         }
         .vraagAfbeelding {
             
@@ -601,7 +601,7 @@ clip-path: polygon(50% 0%, 100% 30%, 100% 100%, 50% 70%, 0 100%, 0 30%);
 
 
 }
-.stukje:first-of-type{
+.game6container .stukje:first-of-type{
     clip-path: polygon(0% 0%, 100% 0, 100% 100%, 50% 70%, 0 100%);
 
 
@@ -667,6 +667,7 @@ clip-path: polygon(50% 0%, 100% 30%, 100% 100%, 50% 70%, 0 100%, 0 30%);
     width:224px;
     height:calc(100vh - 870px);
     display: block;
+    min-height: 80px;
     /* margin-bottom: 10px; */
 }
 .tussenscorescontent::-webkit-scrollbar {
@@ -691,8 +692,13 @@ clip-path: polygon(50% 0%, 100% 30%, 100% 100%, 50% 70%, 0 100%, 0 30%);
     margin-top:10px;       
 }
 .tussenscorescontent td{
-    padding:7px;
+    padding:2px;
+    font-size:12px;
 }
+tr.actief * {
+    background:#00000033;
+    text-shadow:0px 2px 2px #000
+    }
 .tussenscorescontent tr:nth-of-type(odd){background-color:#00000033}
 .contCont{
     display:flex;
@@ -778,7 +784,7 @@ transform: scale(2);
 .progressbar{
     position:absolute;
     bottom:60px;
-    left:60px;
+    left:240px;
     width:600px;
     height:40px;
     border-radius: 40px;
@@ -927,31 +933,27 @@ li {
 
 
         <li class="white e knop knop1" knopNr=1></li>
-            <li class="black ds"></li>
-            <li class="white d"></li>
-            <li class="black cs"></li>
-            <li class="white c  knop knop2" knopNr=2></li>
-         <li class="white b"></li>
-        <li class="black as"></li>
-        <li class="white a  knop knop3" knopNr=3></li>
-        <li class="black gs"></li>
-        <li class="white g"></li>
-        <li class="black fs"></li>
-        <li class="white f"></li>
+            <li class="black ds knop knop2" knopNr=2></li>
+            <li class="white d knop knop3" knopNr=3></li>
+            <li class="black cs knop knop4" knopNr=4></li>
+            <li class="white c  knop knop5" knopNr=5></li>
+         <li class="white b knop knop6" knopNr=6></li>
+        <li class="black as knop knop7" knopNr=7></li>
+        <li class="white a  knop knop8" knopNr=8></li>
+        <li class="black gs knop knop9" knopNr=9></li>
+        <li class="white g knop knop10" knopNr=10></li>
+        <li class="black fs knop knop11" knopNr=11></li>
+        <li class="white f knop knop12" knopNr=12></li>
         
-        <li class="white e knop knop4"  knopNr=4></li>
-            <li class="black ds"></li>
-            <li class="white d"></li>
-            <li class="black cs"></li>
-            <li class="white c knop knop5" knopNr=5></li>
-         <li class="white b" ></li>
-        <li class="black as"></li>
-        <li class="white a  knop knop6" knopNr=6></li>
-        <li class="black gs"></li>
-        <li class="white g" ></li>
-        <li class="black fs"></li>
-        <li class="white f"></li>
-        <li class="white e  knop knop7" knopNr=7></li>
+        <li class="white e knop knop13"  knopNr=13></li>
+            <li class="black ds knop knop14" knopNr=14></li>
+            <li class="white d knop knop15" knopNr=15></li>
+            <li class="black cs knop knop16" knopNr=16></li>
+            <li class="white c knop knop17" knopNr=17></li>
+         <li class="white b knop knop18" knopNr=18 ></li>
+        <li class="black as knop knop19" knopNr=19></li>
+        <li class="white a  knop knop20" knopNr=20></li>
+        
             
       </ul>
       <div class='progressbar'><div class='progress'></div></div>
@@ -1024,6 +1026,9 @@ li {
         <div class='groteKnopContainer' style=' width: 100vw; background-size: cover;
         height: 100vh;'>
       <div class='groteKnop' style='background-image:url(konijn2.png);'></div>
+      <div class='konijn1'></div>
+      <div class='konijn1'></div>
+      <div class='konijn1'></div>
       <div class='konijn1'></div>
       <div class='konijn1'></div>
       <div class='konijn1'></div>
