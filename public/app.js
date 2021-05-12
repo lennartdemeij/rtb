@@ -837,7 +837,8 @@ jQuery(function($){
                  var data = {
                      gameId: (App.gameId),
                      vraagAntwoord: "SKIPPED",
-                     uitkomst:"fout"
+                     uitkomst: "fout",
+                     nummer:App.vraagnummer,
                  };
                 App.Player.updateStatus(data);
                IO.socket.emit('playerPressedSkip', data);
@@ -1239,7 +1240,7 @@ jQuery(function($){
 
                 App.Player.alertData("skip",App.vragenJSON[App.vraagnummer].Antwoord.split("|")[0]);
 
-                App.vraagnummer++;
+                App.vraagnummer=data.nummer+1;
                 App.startVraag();
 
             },
