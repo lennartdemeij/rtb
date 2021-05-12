@@ -67,7 +67,9 @@ function newPlayerPosition(data) {
 function playerPressedAntwoordDoorvoeren(data) {
     io.sockets.in(data.gameId).emit('someonePressedAntwoordDoorvoeren', data);
     console.log('someonePressedAntwoordDoorvoeren')
-    io.sockets.adapter.rooms.get(data.gameId).vraagnummer = data.nummer + 1;
+    if (data.uitkomst == 'goed') {
+        io.sockets.adapter.rooms.get(data.gameId).vraagnummer = data.nummer + 1;
+    }
 
 }
 function stukjeMoved(data) {

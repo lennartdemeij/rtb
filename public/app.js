@@ -1253,7 +1253,7 @@ jQuery(function($){
                 }
                 App.Player.updateStatus(data);
 
-                App.Player.alertData("skip",App.vragenJSON[App.vraagnummer].Antwoord.split("|")[0]);
+                App.Player.alertData("skip",App.vragenJSON[App.vraagnummer].Antwoord.split("|")[0],App.vragenJSON[App.vraagnummer].Correct);
 
                 App.vraagnummer = data.nummer + 1;
                 
@@ -1263,7 +1263,7 @@ jQuery(function($){
 
         
             someonePressedAntwoordDoorvoeren: function (data) {
-                App.Player.alertData(data.uitkomst);
+                App.Player.alertData(data.uitkomst,null,data.uitkomst=='goed'?App.vragenJSON[App.vraagnummer].Correct:App.vragenJSON[App.vraagnummer].Fout);
                 var sounds = document.getElementsByTagName("audio");
                 for (var i = 0; i < sounds.length; i++) {
                   sounds[i].pause();
@@ -1319,7 +1319,7 @@ jQuery(function($){
                     })
                 }
             },
-            alertData: function (uitkomst, uitleg = "") {
+            alertData: function (uitkomst, uitleg = "",extra="") {
                 var uitkomsttekst = "";
 
                 if (uitkomst == 'fout') {
@@ -1339,7 +1339,7 @@ jQuery(function($){
                     uitkomsttekst = "Skipped";
 
                     window.filly = "#966b90";
-                    uitleg = "Het antwoord was: " + uitleg + ".<BR>" + App.vragenJSON[App.vraagnummer].Correct;
+                    uitleg = "Het antwoord was: " + uitleg + ".<BR>" + extra;
                 } else if (uitkomst == 'hint') {
                     $("#hint")[0].play();
 
@@ -1352,7 +1352,7 @@ jQuery(function($){
             
                 }
                 $('.overlay').show();
-                $('.overlay .popup').html("<h1>"+uitkomsttekst+"</h1><p>"+(uitkomst=='goed'?App.vragenJSON[App.vraagnummer].Correct:(uitkomst=='fout'?App.vragenJSON[App.vraagnummer].Fout:uitleg))+"</p><div class='contCont'><div class='btnCont'><div onclick='$(\".overlay\").hide();' class='btn' label=\"Close\"></div></div></div>");
+                $('.overlay .popup').html("<h1>"+uitkomsttekst+"</h1><p>"+(uitkomst=='goed'?extra:(uitkomst=='fout'?extra:uitleg))+"</p><div class='contCont'><div class='btnCont'><div onclick='$(\".overlay\").hide();' class='btn' label=\"Close\"></div></div></div>");
             }
         }
     };
