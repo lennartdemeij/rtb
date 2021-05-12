@@ -67,6 +67,8 @@ function newPlayerPosition(data) {
 function playerPressedAntwoordDoorvoeren(data) {
     io.sockets.in(data.gameId).emit('someonePressedAntwoordDoorvoeren', data);
     console.log('someonePressedAntwoordDoorvoeren')
+    io.sockets.adapter.rooms.get(data.gameId).vraagnummer = data.nummer + 1;
+
 }
 function stukjeMoved(data) {
     io.sockets.in(data.gameId).emit('someoneMovedStukje', data);
@@ -81,40 +83,49 @@ function playerPressedStart(data) {
     
     data.playersReady = io.sockets.adapter.rooms.get(data.gameId).playersReady;
     io.sockets.in(data.gameId).emit('someonePressedStart', data);
+    io.sockets.adapter.rooms.get(data.gameId).vraagnummer = -1;
+
 
 }
 function playersPressedStart(data) {
     //  io.sockets.in(data.gameId).emit('playerPressedKnop', data);
-      console.log('press')
-      data.targetPlayer=Math.floor(Math.random() * io.sockets.adapter.rooms.get(data.gameId).size);
-    io.sockets.in(data.gameId).emit('startGame', data);
-    var counter = 0;
-    var seconds = data.totalTime;
-    var remaining;
-    var interval = setInterval(function () {
-        remaining = seconds - Math.ceil(counter / 1000);
-        io.sockets.in(data.gameId).emit('countdown', remaining);
-        if (counter >= data.totalTime*1000) {
-            io.sockets.in(data.gameId).emit('finished');
-        } else {
-            counter += 1000;
-        }
-        if (counter % 20000 == 0) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('post', 'https://remoteteambuilding.nl/tussenscore.php');
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.send(encodeURIComponent('code') + "=" + encodeURIComponent(data.sessieId));
-            xhr.onload = function () {
-                io.sockets.in(data.gameId).emit('tussenscores', xhr.responseText);
+    if (io.sockets.adapter.rooms.get(data.gameId).vraagnummer == -1) {
+        console.log('press')
+        io.sockets.adapter.rooms.get(data.gameId).vraagnummer = 0;
+
+        data.targetPlayer = Math.floor(Math.random() * io.sockets.adapter.rooms.get(data.gameId).size);
+        io.sockets.in(data.gameId).emit('startGame', data);
+        var counter = 0;
+        var seconds = data.totalTime;
+        var remaining;
+        var interval = setInterval(function () {
+            remaining = seconds - Math.ceil(counter / 1000);
+            io.sockets.in(data.gameId).emit('countdown', remaining);
+            if (counter >= data.totalTime * 1000) {
+                io.sockets.in(data.gameId).emit('finished');
+            } else {
+                counter += 1000;
             }
-        }
-        if (!io.sockets.adapter.rooms.get(data.gameId)){
-            clearInterval(interval);
+            if (counter % 5000 == 0) {
+                io.sockets.in(data.gameId).emit('huidigevraag',
+                    io.sockets.adapter.rooms.get(data.gameId).vraagnummer);
+            }
+            if (counter % 20000 == 0) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('post', 'https://remoteteambuilding.nl/tussenscore.php');
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send(encodeURIComponent('code') + "=" + encodeURIComponent(data.sessieId));
+                xhr.onload = function () {
+                    io.sockets.in(data.gameId).emit('tussenscores', xhr.responseText);
+                }
+            }
+            if (!io.sockets.adapter.rooms.get(data.gameId)) {
+                clearInterval(interval);
 
-        }
-      //  console.log('timer '+remaining);
-    }, 1000);
-
+            }
+            //  console.log('timer '+remaining);
+        }, 1000);
+    }
 
 }
 function playerGotItWrong(data) {
@@ -128,6 +139,7 @@ function playerPressedHint(data) {
 function playerPressedSkip(data) {
     console.log('press')
     io.sockets.in(data.gameId).emit('someonePressedSkip', data);
+    io.sockets.adapter.rooms.get(data.gameId).vraagnummer = data.nummer + 1;
 }
 function playerUpKnop(data) {
     io.sockets.in(data.gameId).emit('playerUpKnop', data);

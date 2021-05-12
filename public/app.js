@@ -65,6 +65,7 @@ jQuery(function($){
             IO.socket.on('tussenscores', IO.tussenscores);
             IO.socket.on('someoneMovedStukje', IO.someoneMovedStukje);
             IO.socket.on('puzzelgoed', IO.puzzelgoed);
+            IO.socket.on('huidigevraag', IO.huidigevraag);
 
             IO.socket.on('countdown', IO.countdown);
             IO.socket.on('finished', IO.finished);
@@ -364,6 +365,13 @@ jQuery(function($){
             $('.tijdScore .tijd').html(new Date(data * 1000).toISOString().substr(11, 8));
             $('.tijdScore .score').html(App.score);
         },
+        huidigevraag: function (data) {
+             console.log('huidigevraag: ' + data, App.vraagnummer);
+            if (data != App.vraagnummer) {
+                App.vraagnummer = data;
+                App.startVraag();
+           }
+        },
         finished: function (data) {
             $("#win")[0].play();
             $("body").append(`<style>.extraknoppen {
@@ -432,7 +440,7 @@ jQuery(function($){
                     uitkomst: "goed",
                     nummer:App.vraagnummer,
                 };
-                App.Player.updateStatus(data);
+               // App.Player.updateStatus(data);
                     IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
             }
         },
@@ -835,7 +843,7 @@ jQuery(function($){
                      uitkomst:"hint"
 
                  };
-                 App.Player.updateStatus(data);
+              //   App.Player.updateStatus(data);
 
                IO.socket.emit('playerPressedHint', data);
             },
@@ -847,7 +855,7 @@ jQuery(function($){
                      uitkomst: "fout",
                      nummer:App.vraagnummer,
                  };
-                App.Player.updateStatus(data);
+            //    App.Player.updateStatus(data);
                IO.socket.emit('playerPressedSkip', data);
                 },
             onAntwoordDoorvoeren: function () {
@@ -886,7 +894,7 @@ jQuery(function($){
                         };
                     }
                     //console.log(data);
-                    App.Player.updateStatus(data);
+                    //App.Player.updateStatus(data);
 
                     IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
 
@@ -909,7 +917,7 @@ jQuery(function($){
                             data.uitkomst = "goed";
                             data.nummer = App.vraagnummer;
 
-                            App.Player.updateStatus(data);
+                          //  App.Player.updateStatus(data);
 
                             IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
 
@@ -940,7 +948,7 @@ jQuery(function($){
                             data.uitkomst = "goed";
                             data.nummer = App.vraagnummer;
 
-                            App.Player.updateStatus(data);
+                           // App.Player.updateStatus(data);
                             IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
 
                         } else {
@@ -1047,7 +1055,7 @@ jQuery(function($){
                             clearInterval(App.animatie);
                             data.nummer = App.vraagnummer;
 
-                            App.Player.updateStatus(data);
+                          //  App.Player.updateStatus(data);
 
                             IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
 
@@ -1082,7 +1090,7 @@ jQuery(function($){
                             data.uitkomst = "goed";
                             data.nummer = App.vraagnummer;
 
-                            App.Player.updateStatus(data);
+                         //   App.Player.updateStatus(data);
 
                             IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
 
@@ -1169,7 +1177,7 @@ jQuery(function($){
                 //     console.log('stop '+i)
                 // App.oscs[i].stop();
                 // }
-                $('.progress').css('width',($('#gameArea .knopactief').length/App.numberOfPlayers)*500+'px');
+                $('.progress').css('width',($('#gameArea .knopactief').length/App.numberOfPlayers)*600+'px');
 
                 App.oscs[(parseInt(data.knopNr) - 1)].frequency.value = 0;
 
@@ -1180,7 +1188,7 @@ jQuery(function($){
             someonePressedKnop: function (data) {
                 
                 $('.knop' + data.knopNr).addClass('knopactief');
-                $('.progress').css('width',($('#gameArea .knopactief').length/App.numberOfPlayers)*500+'px');
+                $('.progress').css('width',($('#gameArea .knopactief').length/App.numberOfPlayers)*600+'px');
                 $('.knopactief').each(function () {
                     App.oscs[(parseInt(data.knopNr) - 1)].frequency.value = App.freqs[(parseInt(data.knopNr) - 1)];
 
@@ -1204,7 +1212,7 @@ jQuery(function($){
                             App.game1finished = true;
                             data.nummer = App.vraagnummer;
 
-                            App.Player.updateStatus(data);
+                          //  App.Player.updateStatus(data);
 
                             IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
                         }
@@ -1218,7 +1226,7 @@ jQuery(function($){
             },
             someonePressedHint: function (data) {
                 App.score -= hintKosten;
-                App.Player.updateStatus(data);
+               App.Player.updateStatus(data);
 
                 App.Player.alertData("hint",App.vragenJSON[App.vraagnummer].Hint);
             },
@@ -1247,7 +1255,8 @@ jQuery(function($){
 
                 App.Player.alertData("skip",App.vragenJSON[App.vraagnummer].Antwoord.split("|")[0]);
 
-                App.vraagnummer=data.nummer+1;
+                App.vraagnummer = data.nummer + 1;
+                
                 App.startVraag();
 
             },
@@ -1294,19 +1303,21 @@ jQuery(function($){
            //     IO.socket.emit('playerPressedAntwoordDoorvoeren', data);
             },
             updateStatus: function (data) {
-                $.ajax({
-                    method: "POST",
+                if (App.playerNumber == 0) {
+                    $.ajax({
+                        method: "POST",
             
-                     data: {id:App.sessieId,status:App.vraagnummer+":"+data.uitkomst+(data.uitkomst=="fout"?"("+data.vraagAntwoord+")":""),straftijd:App.score},
-                    url: 'https://remoteteambuilding.nl/updatesessie.php',
-                     success: function (dat) {
-                         console.log(dat);
+                        data: { id: App.sessieId, status: App.vraagnummer + ":" + data.uitkomst + (data.uitkomst == "fout" ? "(" + data.vraagAntwoord + ")" : ""), straftijd: App.score },
+                        url: 'https://remoteteambuilding.nl/updatesessie.php',
+                        success: function (dat) {
+                            console.log(dat);
  
-                        //   console.log(App.vragenJSON)
-                    }, error: function (er) {
-                        console.log("wat",er)
-                    }
-                 })
+                            //   console.log(App.vragenJSON)
+                        }, error: function (er) {
+                            console.log("wat", er)
+                        }
+                    })
+                }
             },
             alertData: function (uitkomst, uitleg = "") {
                 var uitkomsttekst = "";
