@@ -394,6 +394,9 @@ jQuery(function($){
                 display:block !important;
                 pointer-events: all !important;
             }
+            .btnCont{
+                margin: 0px auto !important;
+            }
             `);
             $('.postIntro').css('filter', 'none').css('background-image', 'url(./lucht.svg)');
 
@@ -629,7 +632,11 @@ jQuery(function($){
                 .popup *{
                     display:block !important;
                     pointer-events: all !important;
-                }`);
+                }
+                .btnCont{
+                    margin: 0px auto !important;
+                }
+                `);
                 return;
             }
             console.log(App.vragenJSON[App.vraagnummer]);
