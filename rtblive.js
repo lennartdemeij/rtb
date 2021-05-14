@@ -165,7 +165,12 @@ function playersPressedStart(data) {
       var counter = 0;
       var seconds = data.totalTime;
       var remaining;
-      var interval = setInterval(function () {
+        var interval = setInterval(function () {
+          
+            if (!io.sockets.adapter.rooms.get(data.gameId)) {
+                clearInterval(interval);
+                return;
+              }
         remaining = seconds - Math.ceil(counter / 1000);
         io.sockets.in(data.gameId).emit("countdown", remaining);
         if (counter >= data.totalTime * 1000) {
@@ -178,7 +183,7 @@ function playersPressedStart(data) {
             .in(data.gameId)
             .emit(
               "huidigevraag",
-              io.sockets.adapter.rooms.get(data.gameId).vraagnummer
+              io.sockets.adapter.rooms.get(data.gameId)?.vraagnummer
             );
         }
         if (counter % 20000 == 0) {
