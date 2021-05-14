@@ -178,7 +178,7 @@ function playersPressedStart(data) {
                 } else {
                     counter += 1000;
                 }
-                if (counter % 5000 == 0) {
+                if (counter % 5000 == 0 && io.sockets.adapter.rooms.get(data.gameId)) {
                     io.sockets
                         .in(data.gameId)
                         .emit(
