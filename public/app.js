@@ -1308,7 +1308,7 @@ jQuery(function($){
                         method: "POST",
             
                         data: { id: App.sessieId, status: App.vraagnummer + ":" + data.uitkomst + (data.uitkomst == "fout" ? "(" + data.vraagAntwoord + ")" : ""), straftijd: App.score },
-                        url: 'https://remoteteambuilding.nl/updatesessie.php',
+                        url: 'https://remoteteambuilding.nl/updatesessieNode.php',
                         success: function (dat) {
                             console.log(dat);
  
