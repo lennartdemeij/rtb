@@ -166,44 +166,48 @@ function playersPressedStart(data) {
       var seconds = data.totalTime;
       var remaining;
         var interval = setInterval(function () {
-          
-            if (!io.sockets.adapter.rooms.get(data.gameId)) {
-                clearInterval(interval);
-                return;
-              }
-        remaining = seconds - Math.ceil(counter / 1000);
-        io.sockets.in(data.gameId).emit("countdown", remaining);
-        if (counter >= data.totalTime * 1000) {
-          io.sockets.in(data.gameId).emit("finished");
-        } else {
-          counter += 1000;
-        }
-        if (counter % 5000 == 0) {
-          io.sockets
-            .in(data.gameId)
-            .emit(
-              "huidigevraag",
-              io.sockets.adapter.rooms.get(data.gameId)?.vraagnummer
-            );
-        }
-        if (counter % 20000 == 0) {
-          var xhr = new XMLHttpRequest();
-          xhr.open("post", "https://remoteteambuilding.nl/tussenscore.php");
-          xhr.setRequestHeader(
-            "Content-Type",
-            "application/x-www-form-urlencoded"
-          );
-          xhr.send(
-            encodeURIComponent("code") + "=" + encodeURIComponent(data.sessieId)
-          );
-          xhr.onload = function () {
-            io.sockets.in(data.gameId).emit("tussenscores", xhr.responseText);
-          };
-        }
-        if (!io.sockets.adapter.rooms.get(data.gameId)) {
-          clearInterval(interval);
-        }
-        //  console.log('timer '+remaining);
+            try {
+                if (!io.sockets.adapter.rooms.get(data.gameId)) {
+                    clearInterval(interval);
+                    return;
+                }
+                remaining = seconds - Math.ceil(counter / 1000);
+                io.sockets.in(data.gameId).emit("countdown", remaining);
+                if (counter >= data.totalTime * 1000) {
+                    io.sockets.in(data.gameId).emit("finished");
+                } else {
+                    counter += 1000;
+                }
+                if (counter % 5000 == 0) {
+                    io.sockets
+                        .in(data.gameId)
+                        .emit(
+                            "huidigevraag",
+                            io.sockets.adapter.rooms.get(data.gameId)?.vraagnummer
+                        );
+                }
+                if (counter % 20000 == 0) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("post", "https://remoteteambuilding.nl/tussenscore.php");
+                    xhr.setRequestHeader(
+                        "Content-Type",
+                        "application/x-www-form-urlencoded"
+                    );
+                    xhr.send(
+                        encodeURIComponent("code") + "=" + encodeURIComponent(data.sessieId)
+                    );
+                    xhr.onload = function () {
+                        io.sockets.in(data.gameId).emit("tussenscores", xhr.responseText);
+                    };
+                }
+                if (!io.sockets.adapter.rooms.get(data.gameId)) {
+                    clearInterval(interval);
+                }
+                //  console.log('timer '+remaining);
+            } catch (err) {
+                mailme("interval", err);
+
+            }
       }, 1000);
     }
   } catch (err) {
