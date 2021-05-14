@@ -183,7 +183,7 @@ function playersPressedStart(data) {
                         .in(data.gameId)
                         .emit(
                             "huidigevraag",
-                            io.sockets.adapter.rooms.get(data.gameId)?.vraagnummer
+                            io.sockets.adapter.rooms.get(data.gameId).vraagnummer
                         );
                 }
                 if (counter % 20000 == 0) {
