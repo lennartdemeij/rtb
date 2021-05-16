@@ -508,6 +508,7 @@ jQuery(function($){
     };
 
     var App = {
+        timeSinceAlert:0,
         playersReady:0,
         score:0,
         huidigeMuziek: '',
@@ -1225,12 +1226,15 @@ jQuery(function($){
                 $('.score').html(App.score);
             },
             someonePressedHint: function (data) {
+                App.Player.alertData("hint",App.vragenJSON[App.vraagnummer].Hint);
+
                 App.score -= hintKosten;
                App.Player.updateStatus(data);
 
-                App.Player.alertData("hint",App.vragenJSON[App.vraagnummer].Hint);
             },
             someonePressedSkip: function (data) {
+                App.Player.alertData("skip",App.vragenJSON[App.vraagnummer].Antwoord.split("|")[0],App.vragenJSON[App.vraagnummer].Correct);
+
                 var sounds = document.getElementsByTagName("audio");
                 for (var i = 0; i < sounds.length; i++) {
                   sounds[i].pause();
@@ -1253,7 +1257,6 @@ jQuery(function($){
                 }
                 App.Player.updateStatus(data);
 
-                App.Player.alertData("skip",App.vragenJSON[App.vraagnummer].Antwoord.split("|")[0],App.vragenJSON[App.vraagnummer].Correct);
 
                 App.vraagnummer = data.nummer + 1;
                 
@@ -1319,7 +1322,11 @@ jQuery(function($){
                     })
                 }
             },
-            alertData: function (uitkomst, uitleg = "",extra="") {
+            alertData: function (uitkomst, uitleg = "", extra = "") {
+                if (App.timeSinceAlert == 0) {
+                    App.timeSinceAlert = 1;
+                    setTimeout(()=> {App.timeSinceAlert=0 },5000);
+                
                 var uitkomsttekst = "";
 
                 if (uitkomst == 'fout') {
@@ -1353,6 +1360,7 @@ jQuery(function($){
                 }
                 $('.overlay').show();
                 $('.overlay .popup').html("<h1>"+uitkomsttekst+"</h1><p>"+(uitkomst=='goed'?extra:(uitkomst=='fout'?extra:uitleg))+"</p><div class='contCont'><div class='btnCont'><div onclick='$(\".overlay\").hide();' class='btn' label=\"Close\"></div></div></div>");
+                }
             }
         }
     };
