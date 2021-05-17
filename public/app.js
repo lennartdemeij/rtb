@@ -1,11 +1,11 @@
 
 jQuery(function($){    
     'use strict';
-    var hintKosten = 10;
+    var hintKosten = 30;
     var miniKosten = 3;
-    var foutKosten = 20;
+    var foutKosten = 10;
     var skipKosten = 100;
-    var goedOpbrengst = 150;
+    var goedOpbrengst = 200;
     var gameOpbrengst = 200;
     var timesPerSecond = 5; // how many times to fire the event per second
     var wait = false;
