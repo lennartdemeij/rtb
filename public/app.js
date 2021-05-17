@@ -86,7 +86,7 @@ jQuery(function($){
             for (var p = 0; p < data.numberOfPlayers; p++) {
                 $('.players').append("<img src='man.svg' style='height:100px; " + (p < App.playersReady ? "filter:invert(1);" : "") + "'>");
             }
-            $('#playerWaitingMessage').html('Press start when everyone is here.');
+            $('#playerWaitingMessage').html('Press start when everyone is here.<BR><BR><em style="color:#fff">Make sure the number of players displayed<BR>above is the same as the number of people in your team!</em>');
         },
         showStartButton: function (data) {
             $('.startButtonCont').show();
