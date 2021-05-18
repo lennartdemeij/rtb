@@ -147,6 +147,7 @@ function playerPressedStart(data) {
     data.playersReady = io.sockets.adapter.rooms.get(data.gameId).playersReady;
     io.sockets.in(data.gameId).emit("someonePressedStart", data);
     io.sockets.adapter.rooms.get(data.gameId).vraagnummer = -1;
+    io.sockets.adapter.rooms.get(data.gameId).finished = 0;
   } catch (err) {
     mailme("playerPressedStart", err);
   }
@@ -173,8 +174,10 @@ function playersPressedStart(data) {
                 }
                 remaining = seconds - Math.ceil(counter / 1000);
                 io.sockets.in(data.gameId).emit("countdown", remaining);
-                if (counter >= data.totalTime * 1000) {
-                    io.sockets.in(data.gameId).emit("finished");
+                if (counter >= data.totalTime * 1000&&io.sockets.adapter.rooms.get(data.gameId).finished==0) {
+                  io.sockets.in(data.gameId).emit("finished");
+                  io.sockets.adapter.rooms.get(data.gameId).finished = 1;
+                    
                 } else {
                     counter += 1000;
                 }

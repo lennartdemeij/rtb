@@ -161,6 +161,7 @@ jQuery(function($){
                 .each(function (i) {
                     if (App.gameId == $(this).find("td:nth-of-type(2)").html()) {
                         $(this).addClass("actief");
+                        App.score = parseInt($(this).find('td:nth-of-type(3)').html());
                     }
                 });
             var onzetijd = $(".actief").attr("starttijd");
