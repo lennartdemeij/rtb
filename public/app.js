@@ -1237,8 +1237,8 @@ jQuery(function($){
                 App.Player.alertData("skip",App.vragenJSON[App.vraagnummer].Antwoord.split("|")[0],App.vragenJSON[App.vraagnummer].Correct);
                 var mus = document.querySelector("#muziek");
 
-                mus[0].pause();
-                                        mus[0].currentTime = 0;
+                mus.pause();
+                                        mus.currentTime = 0;
               
                 if (App.vragenJSON[App.vraagnummer].Vraag == 'game1') {
                     var sounds = document.getElementsByTagName("audio");
@@ -1275,8 +1275,8 @@ jQuery(function($){
                 var sounds = document.getElementsByTagName("audio");
                 var mus = document.querySelector("#muziek");
 
-mus[0].pause();
-                        mus[0].currentTime = 0;
+mus.pause();
+                        mus.currentTime = 0;
                 if (App.vragenJSON[App.vraagnummer].Vraag == 'game1') {
                     for (var i = 0; i < sounds.length; i++) {
                         sounds[i].pause();
