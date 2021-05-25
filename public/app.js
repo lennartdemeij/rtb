@@ -1235,14 +1235,17 @@ jQuery(function($){
             },
             someonePressedSkip: function (data) {
                 App.Player.alertData("skip",App.vragenJSON[App.vraagnummer].Antwoord.split("|")[0],App.vragenJSON[App.vraagnummer].Correct);
+                var mus = document.querySelector("#muziek");
 
-                var sounds = document.getElementsByTagName("audio");
-               
+                mus[i].pause();
+                                        mus[i].currentTime = 0;
+              
                 if (App.vragenJSON[App.vraagnummer].Vraag == 'game1') {
+                    var sounds = document.getElementsByTagName("audio");
                     for (var i = 0; i < sounds.length; i++) {
-                        sounds[i].pause();
-                        sounds[i].currentTime = 0;
-                      }
+                      sounds[i].pause();
+                      sounds[i].currentTime = 0;
+                    }
                     for (var i = 0; i < App.oscs.length; i++) {
                         console.log('stop ' + i)
                         try {
@@ -1270,7 +1273,10 @@ jQuery(function($){
             someonePressedAntwoordDoorvoeren: function (data) {
                 App.Player.alertData(data.uitkomst,null,data.uitkomst=='goed'?App.vragenJSON[App.vraagnummer].Correct:App.vragenJSON[App.vraagnummer].Fout);
                 var sounds = document.getElementsByTagName("audio");
-              
+                var mus = document.querySelector("#muziek");
+
+mus[i].pause();
+                        mus[i].currentTime = 0;
                 if (App.vragenJSON[App.vraagnummer].Vraag == 'game1') {
                     for (var i = 0; i < sounds.length; i++) {
                         sounds[i].pause();
