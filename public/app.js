@@ -580,7 +580,7 @@ jQuery(function($){
                 url: 'https://remoteteambuilding.nl/live/json.php',
                 success: function(data){
                     App.vragenJSON = (JSON.parse(atob(data).replace(/,false/g, '')));
-                    console.log(App.vragenJSON);//dit uit in production
+                    //console.log(App.vragenJSON);//dit uit in production
                 }, error: function (er) {
                     console.log("wat",er)
                 }
@@ -741,6 +741,16 @@ jQuery(function($){
                                  //App.mySocketId = data.mySocketId;
                                  App.myRole = 'Player';
                                  App.Player.myName = data.playerName;
+                                 $.ajax({
+                                    url: 'https://remoteteambuilding.nl/live/json.php?lang='+wat[5]+'&digi='+(App.gameId.substr(0,4).toLowerCase()=='digi'?1:0),
+                                    success: function(data){
+                                        App.vragenJSON = (JSON.parse(atob(data).replace(/,false/g, '')));
+                                        //console.log(App.vragenJSON);//dit uit in production
+                                    }, error: function (er) {
+                                        console.log("wat",er)
+                                    }
+                                 })
+                                 
                              } else {
                                 $('#playerWaitingMessage').html('This game has already started.');
                                 $('.btnStartCont').show();
