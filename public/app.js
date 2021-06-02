@@ -86,8 +86,13 @@ jQuery(function($){
             for (var p = 0; p < data.numberOfPlayers; p++) {
                 $('.players').append("<img src='man.svg' style='height:100px; " + (p < App.playersReady ? "filter:invert(1);" : "") + "'>");
             }
-            $('#playerWaitingMessage').html('Press start when everyone is here.<BR><BR><em style="color:#fff">Make sure the number of players displayed<BR>above is the same as the number of people in your team!</em>');
-        },
+            if (App.lang == 0 || App.lang == 3) {
+                $('#playerWaitingMessage').html('Druk pas op start als iedereen er is.<BR><BR><em style="color:#fff">Zorg ervoor dat het aantal spelers hierboven<BR>hetzelfde is als het aantal spelers in je team!</em>');
+                
+            } else {
+                $('#playerWaitingMessage').html('Press start when everyone is here.<BR><BR><em style="color:#fff">Make sure the number of players displayed<BR>above is the same as the number of people in your team!</em>');
+            }
+            },
         showStartButton: function (data) {
             $('.startButtonCont').show();
         },
@@ -509,6 +514,7 @@ jQuery(function($){
     };
 
     var App = {
+        lang:0,
         timeSinceAlert:0,
         playersReady:0,
         score:0,
@@ -726,9 +732,17 @@ jQuery(function($){
                              var wat=                          dat.split(",");
                              App.sessieId = wat[1];
                              App.bedrijf = wat[4];
+                             App.lang = wat[5];
+
                              if (wat[3] == 'aangemaakt') {
-                                 $('#playerWaitingMessage').html('Player joined, press start when everyone is here.');
-                                 var data = {
+                                 if (App.lang == 0 || App.lang == 3) {
+                                    $('#playerWaitingMessage').html('Speler aangemeld, druk pas op start als iedereen er is.');
+
+                                 } else {                                     $('#playerWaitingMessage').html('Player joined, press start when everyone is here.');
+
+
+                                 }
+                                     var data = {
                                      gameId: ($('#inputGameId').val().toLowerCase()),
                                      playerName: $('#inputPlayerName').val() || 'NoName'
                                  };
@@ -1365,7 +1379,12 @@ mus.pause();
                     uitkomsttekst = "Skipped";
 
                     window.filly = "#966b90";
-                    uitleg = "Het antwoord was: " + uitleg + ".<BR>" + extra;
+                    if (App.lang == 0||App.lang==3) {
+                        uitleg = "Het antwoord was: " + uitleg + ".<BR>" + extra;
+                    } else {
+                        uitleg = "The answer was: " + uitleg + ".<BR>" + extra;
+                        
+                    }
                 } else if (uitkomst == 'hint') {
                     $("#hint")[0].play();
 
