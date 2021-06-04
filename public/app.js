@@ -192,7 +192,7 @@ jQuery(function($){
                     }
                 });
             if (App.geenfinale == 1 && App.timeleft<1200 ) {
-                $("table").css('opacity', 0);
+                $("table,.ranking").css('opacity', 0);
             }
         },
         startGame: function (data) {
@@ -419,6 +419,7 @@ jQuery(function($){
             $('.postIntro').css('filter', 'none').css('background-image', 'url(./lucht.svg)');
 
             confetti();
+            $('.ranking').html("GAME OVER").show();
             
         },
         klikGameClicked: function (data) {
@@ -624,6 +625,8 @@ jQuery(function($){
             if (!App.vragenJSON[App.vraagnummer]) {
                 $('.postIntro').css('filter', 'none').css('background-image', 'url(./lucht.svg)');
                 confetti();
+                $('.ranking').html("GAME OVER").show();
+
                 $("#win")[0].play();
                 $("body").append(`<style>.extraknoppen {
                     position: absolute;
