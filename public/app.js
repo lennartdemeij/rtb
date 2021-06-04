@@ -419,7 +419,7 @@ jQuery(function($){
             $('.postIntro').css('filter', 'none').css('background-image', 'url(./lucht.svg)');
 
             confetti();
-            $('.ranking').html("GAME OVER").show();
+            $('.ranking').html("GAME OVER").css('opacity',1);
             
         },
         klikGameClicked: function (data) {
@@ -625,7 +625,7 @@ jQuery(function($){
             if (!App.vragenJSON[App.vraagnummer]) {
                 $('.postIntro').css('filter', 'none').css('background-image', 'url(./lucht.svg)');
                 confetti();
-                $('.ranking').html("GAME OVER").show();
+                $('.ranking').html("GAME OVER").css('opacity',1);
 
                 $("#win")[0].play();
                 $("body").append(`<style>.extraknoppen {
