@@ -191,6 +191,9 @@ jQuery(function($){
                         }
                     }
                 });
+            if (App.geenfinale == 1 && App.timeleft<1200 ) {
+                $("table").css('opacity', 0);
+            }
         },
         startGame: function (data) {
             if (App.targetPlayer > -1) {
@@ -367,6 +370,7 @@ jQuery(function($){
             console.log('playerPressedKnop', data);
         },
         countdown: function (data) {
+            App.timeleft = data;
             // console.log('tijd: ' + data);
             $('.tijdScore .tijd').html(new Date(data * 1000).toISOString().substr(11, 8));
             $('.tijdScore .score').html(App.score);
@@ -733,6 +737,7 @@ jQuery(function($){
                              App.sessieId = wat[1];
                              App.bedrijf = wat[4];
                              App.lang = wat[5];
+                             App.geenfinale = wat[6];
 
                              if (wat[3] == 'aangemaakt') {
                                  if (App.lang == 0 || App.lang == 3) {

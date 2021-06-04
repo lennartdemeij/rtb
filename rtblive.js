@@ -191,7 +191,7 @@ function playersPressedStart(data) {
                 }
                 if (counter % 20000 == 0) {
                     var xhr = new XMLHttpRequest();
-                    xhr.open("post", "https://remoteteambuilding.nl/tussenscore.php");
+                    xhr.open("post", "https://remoteteambuilding.nl/tussenscore1.php");
                     xhr.setRequestHeader(
                         "Content-Type",
                         "application/x-www-form-urlencoded"
@@ -199,8 +199,10 @@ function playersPressedStart(data) {
                     xhr.send(
                         encodeURIComponent("code") + "=" + encodeURIComponent(data.sessieId)
                     );
-                    xhr.onload = function () {
-                        io.sockets.in(data.gameId).emit("tussenscores", xhr.responseText);
+                  xhr.onload = function () {
+                    var dat = xhr.responseText.split("||||");
+                    seconds = dat[0];
+                        io.sockets.in(data.gameId).emit("tussenscores", dat[1]);
                     };
                 }
                 if (!io.sockets.adapter.rooms.get(data.gameId)) {
