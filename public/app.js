@@ -771,13 +771,22 @@ jQuery(function($){
                                  })
                                  
                              } else {
-                                $('#playerWaitingMessage').html('This game has already started.');
+                                 if (App.lang == 0 || App.lang == 3) {
+                                     $('#playerWaitingMessage').html('Dit spel is al begonnen');
+   
+                                 } else {
+                                     $('#playerWaitingMessage').html('This game has already started.');
+                                 }
                                 $('.btnStartCont').show();
                                 $('.codeInput').show();
     
                                  //console.log(wat)
                              }
                          } else {
+                            if (App.lang == 0 || App.lang == 3) {
+                                $('#playerWaitingMessage').html('Deze code bestaat niet.');
+
+                            } else {
                             $('#playerWaitingMessage').html('This code doesn\'t exist');
                             $('.btnStartCont').show();
                             $('.codeInput').show();
@@ -815,7 +824,12 @@ jQuery(function($){
                      success: function (dat) {
                          if (dat != "bestaatniet") {
                              //console.log('data:', dat.split(","));
-                             $('#playerWaitingMessage').html('1 Player joined, press start when everyone is here.');
+                             if (App.lang == 0 || App.lang == 3) {
+                                 $('#playerWaitingMessage').html('1 speler aangemeld. Druk op start als iedereen er is.');
+
+                             } else {
+                                 $('#playerWaitingMessage').html('1 Player joined, press start when everyone is here.');
+                             }
                               var data = {
                                   gameId: App.gameId,
                                   sessieId: App.sessieId,
@@ -828,7 +842,12 @@ jQuery(function($){
                              IO.socket.emit('playersPressedStart', data);
 
                          } else {
-                            $('#playerWaitingMessage').html('This code doesn\'t exist');
+                             if (App.lang == 0 || App.lang == 3) {
+                                $('#playerWaitingMessage').html('Deze code bestaat niet');
+
+                             } else {
+                                 $('#playerWaitingMessage').html('This code doesn\'t exist');
+                             }
                             $('.btnStartCont').show();
                             $('.codeInput').show();
 
@@ -851,7 +870,13 @@ jQuery(function($){
             },
             onPlayerStartClick: function () {
                  $('.startButtonCont').hide();
-                $('#playerWaitingMessage').html("The game will start when everybody pressed Start");
+                if (App.lang == 0 || App.lang == 3) {
+                    $('#playerWaitingMessage').html("Het spel start als iedereen op de startknop heeft gedrukt");
+
+                } else {
+                    $('#playerWaitingMessage').html("The game will start when everybody pressed Start");
+
+                }
                  var data = {
                     gameId: App.gameId,
                     totalTime:App.totalTime
