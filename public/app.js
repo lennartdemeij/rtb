@@ -786,11 +786,12 @@ jQuery(function($){
                                  //console.log(wat)
                              }
                          } else {
-                            if (App.lang == 0 || App.lang == 3) {
-                                $('#playerWaitingMessage').html('Deze code bestaat niet.');
+                             if (App.lang == 0 || App.lang == 3) {
+                                 $('#playerWaitingMessage').html('Deze code bestaat niet.');
 
-                            } else {
-                            $('#playerWaitingMessage').html('This code doesn\'t exist');
+                             } else {
+                                 $('#playerWaitingMessage').html('This code doesn\'t exist');
+                             }
                             $('.btnStartCont').show();
                             $('.codeInput').show();
 
