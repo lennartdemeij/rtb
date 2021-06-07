@@ -191,7 +191,7 @@ jQuery(function($){
                         }
                     }
                 });
-            if (App.geenfinale == 1 && App.timeleft<1200 ) {
+            if ( App.timeleft<1200 ) {
                 $("table,.ranking").css('opacity', 0);
             }
         },
