@@ -728,7 +728,39 @@ jQuery(function($){
                 console.log('Player clicked "Join"');
                 $('.btnStartCont').hide();
                 $('.codeInput').hide();
-                 
+                window.code = $('#inputGameId').val().toLowerCase();
+                if(window.code.substr(0,3)=="nxt"){
+                    window.location="https://next.remoteteambuilding.nl";
+                }
+                  if(window.code.substr(0,3)=="2.0"){
+                    window.location="https://live.remoteteambuilding.nl";
+                }
+                 if((window.code.substr(0,4)=="xmas"||window.code.substr(0,8)=="pptbxmas") && window.hoho != "ho"){
+                     if(window.lang!='en'){
+                         if(window.code.substr(0,4)=='pptb'){
+                                          window.location="https://remoteteambuilding.nl/?hoho=ho&custom=pptb";
+            
+                             }else{
+                         window.location="https://kerst.remoteteambuilding.nl";
+                         }
+                    }else{
+                          if(window.code.substr(0,4)=='pptb'){
+                                          window.location="https://remoteteambuilding.nl/?hoho=ho&lang=en&custom=pptb";
+            
+                             }else{
+                        window.location="https://xmas.remoteteambuildinggame.com";
+                        }
+                     
+                     }
+                } else  if(window.code.substr(0,3)=="rtb" && window.hoho == "ho"){
+                     if(window.lang!='en'){
+                         window.location="https://remoteteambuilding.nl";
+                    }else{
+                        window.location="https://remoteteambuildinggame.com";
+                     
+                     }
+                 }
+                
                  $.ajax({
                     method: "POST",
             
