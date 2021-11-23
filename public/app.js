@@ -750,7 +750,7 @@ jQuery(function($){
                         }
                      
                     }
-                } else if (window.code.substr(0, 3) == "rtb" && window.hoho == "ho") {
+                } else if (window.code.substr(0, 3) == "rtb") {
                     if (window.lang != 'en') {
                         window.location = "https://remoteteambuilding.nl";
                     } else {
