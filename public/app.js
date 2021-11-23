@@ -729,116 +729,115 @@ jQuery(function($){
                 $('.btnStartCont').hide();
                 $('.codeInput').hide();
                 window.code = $('#inputGameId').val().toLowerCase();
-                if(window.code.substr(0,3)=="nxt"){
-                    window.location="https://next.remoteteambuilding.nl";
-                }
-                  if(window.code.substr(0,3)=="2.0"){
-                    window.location="https://live.remoteteambuilding.nl";
-                }
-                 if((window.code.substr(0,4)=="xmas"||window.code.substr(0,8)=="pptbxmas") && window.hoho != "ho"){
-                     if(window.lang!='en'){
-                         if(window.code.substr(0,4)=='pptb'){
-                                          window.location="https://remoteteambuilding.nl/?hoho=ho&custom=pptb";
+                if (window.code.substr(0, 3) == "nxt") {
+                    window.location = "https://next.remoteteambuilding.nl";
+                } else if (window.code.substr(0, 3) == "2.0") {
+                    window.location = "https://live.remoteteambuilding.nl";
+                } else if ((window.code.substr(0, 4) == "xmas" || window.code.substr(0, 8) == "pptbxmas") && window.hoho != "ho") {
+                    if (window.lang != 'en') {
+                        if (window.code.substr(0, 4) == 'pptb') {
+                            window.location = "https://remoteteambuilding.nl/?hoho=ho&custom=pptb";
             
-                             }else{
-                         window.location="https://kerst.remoteteambuilding.nl";
-                         }
-                    }else{
-                          if(window.code.substr(0,4)=='pptb'){
-                                          window.location="https://remoteteambuilding.nl/?hoho=ho&lang=en&custom=pptb";
+                        } else {
+                            window.location = "https://kerst.remoteteambuilding.nl";
+                        }
+                    } else {
+                        if (window.code.substr(0, 4) == 'pptb') {
+                            window.location = "https://remoteteambuilding.nl/?hoho=ho&lang=en&custom=pptb";
             
-                             }else{
-                        window.location="https://xmas.remoteteambuildinggame.com";
+                        } else {
+                            window.location = "https://xmas.remoteteambuildinggame.com";
                         }
                      
-                     }
-                } else  if(window.code.substr(0,3)=="rtb" && window.hoho == "ho"){
-                     if(window.lang!='en'){
-                         window.location="https://remoteteambuilding.nl";
-                    }else{
-                        window.location="https://remoteteambuildinggame.com";
+                    }
+                } else if (window.code.substr(0, 3) == "rtb" && window.hoho == "ho") {
+                    if (window.lang != 'en') {
+                        window.location = "https://remoteteambuilding.nl";
+                    } else {
+                        window.location = "https://remoteteambuildinggame.com";
                      
-                     }
-                 }
+                    }
+                } else {
                 
-                 $.ajax({
-                    method: "POST",
+                    $.ajax({
+                        method: "POST",
             
-                     data: {code:$('#inputGameId').val().toLowerCase()},
-                    url: 'https://remoteteambuilding.nl/registreerspeler.php',
-                     success: function (dat) {
-                         if (dat != "bestaatniet") {
-                             var wat=                          dat.split(",");
-                             App.sessieId = wat[1];
-                             App.bedrijf = wat[4];
-                             App.lang = wat[5];
-                             App.geenfinale = wat[6];
+                        data: { code: $('#inputGameId').val().toLowerCase() },
+                        url: 'https://remoteteambuilding.nl/registreerspeler.php',
+                        success: function (dat) {
+                            if (dat != "bestaatniet") {
+                                var wat = dat.split(",");
+                                App.sessieId = wat[1];
+                                App.bedrijf = wat[4];
+                                App.lang = wat[5];
+                                App.geenfinale = wat[6];
 
-                             if (wat[3] == 'aangemaakt') {
-                                 if (App.lang == 0 || App.lang == 3) {
-                                    $('#playerWaitingMessage').html('Speler aangemeld, druk pas op start als iedereen er is.');
+                                if (wat[3] == 'aangemaakt') {
+                                    if (App.lang == 0 || App.lang == 3) {
+                                        $('#playerWaitingMessage').html('Speler aangemeld, druk pas op start als iedereen er is.');
 
-                                 } else {                                     $('#playerWaitingMessage').html('Player joined, press start when everyone is here.');
+                                    } else {
+                                        $('#playerWaitingMessage').html('Player joined, press start when everyone is here.');
 
 
-                                 }
-                                     var data = {
-                                     gameId: ($('#inputGameId').val().toLowerCase()),
-                                     playerName: $('#inputPlayerName').val() || 'NoName'
-                                 };
-                               
-                             //    console.log(data)
-                                 IO.socket.emit('playerJoinGame', data);
-                                 App.gameId = data.gameId;
-                                 App.totalTime = wat[7];
-                                 $('.logo img').attr('src', 'https://remoteteambuilding.nl/' + wat[2]);
-                                 //App.mySocketId = data.mySocketId;
-                                 App.myRole = 'Player';
-                                 App.Player.myName = data.playerName;
-                                 $.ajax({
-                                    url: 'https://remoteteambuilding.nl/live/json.php?lang='+wat[5]+'&digi='+(App.gameId.substr(0,4).toLowerCase()=='digi'?1:0),
-                                    success: function(data){
-                                        App.vragenJSON = (JSON.parse(atob(data).replace(/,false/g, '')));
-                                        //console.log(App.vragenJSON);//dit uit in production
-                                    }, error: function (er) {
-                                        console.log("wat",er)
                                     }
-                                 })
+                                    var data = {
+                                        gameId: ($('#inputGameId').val().toLowerCase()),
+                                        playerName: $('#inputPlayerName').val() || 'NoName'
+                                    };
+                               
+                                    //    console.log(data)
+                                    IO.socket.emit('playerJoinGame', data);
+                                    App.gameId = data.gameId;
+                                    App.totalTime = wat[7];
+                                    $('.logo img').attr('src', 'https://remoteteambuilding.nl/' + wat[2]);
+                                    //App.mySocketId = data.mySocketId;
+                                    App.myRole = 'Player';
+                                    App.Player.myName = data.playerName;
+                                    $.ajax({
+                                        url: 'https://remoteteambuilding.nl/live/json.php?lang=' + wat[5] + '&digi=' + (App.gameId.substr(0, 4).toLowerCase() == 'digi' ? 1 : 0),
+                                        success: function (data) {
+                                            App.vragenJSON = (JSON.parse(atob(data).replace(/,false/g, '')));
+                                            //console.log(App.vragenJSON);//dit uit in production
+                                        }, error: function (er) {
+                                            console.log("wat", er)
+                                        }
+                                    })
                                  
-                             } else {
-                                 if (App.lang == 0 || App.lang == 3) {
-                                     $('#playerWaitingMessage').html('Dit spel is al begonnen');
+                                } else {
+                                    if (App.lang == 0 || App.lang == 3) {
+                                        $('#playerWaitingMessage').html('Dit spel is al begonnen');
    
-                                 } else {
-                                     $('#playerWaitingMessage').html('This game has already started.');
-                                 }
+                                    } else {
+                                        $('#playerWaitingMessage').html('This game has already started.');
+                                    }
+                                    $('.btnStartCont').show();
+                                    $('.codeInput').show();
+    
+                                    //console.log(wat)
+                                }
+                            } else {
+                                if (App.lang == 0 || App.lang == 3) {
+                                    $('#playerWaitingMessage').html('Deze code bestaat niet.');
+
+                                } else {
+                                    $('#playerWaitingMessage').html('This code doesn\'t exist');
+                                }
                                 $('.btnStartCont').show();
                                 $('.codeInput').show();
-    
-                                 //console.log(wat)
-                             }
-                         } else {
-                             if (App.lang == 0 || App.lang == 3) {
-                                 $('#playerWaitingMessage').html('Deze code bestaat niet.');
 
-                             } else {
-                                 $('#playerWaitingMessage').html('This code doesn\'t exist');
-                             }
-                            $('.btnStartCont').show();
-                            $('.codeInput').show();
-
-                             console.log('bestaat niet...')
-                         }
+                                console.log('bestaat niet...')
+                            }
                        
                         
                         
-                        //   console.log(App.vragenJSON)
-                    }, error: function (er) {
-                        console.log("wat",er)
-                    }
-                 })
+                            //   console.log(App.vragenJSON)
+                        }, error: function (er) {
+                            console.log("wat", er)
+                        }
+                    })
                  
-
+                }
               
             },
             playerPressedStart: function () {
