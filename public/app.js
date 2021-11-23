@@ -754,7 +754,7 @@ jQuery(function($){
                     if (window.lang != 'en') {
                         window.location = "https://remoteteambuilding.nl";
                     } else {
-                        window.location = "https://remoteteambuildinggame.com";
+                        window.location = "https://remoteteambuildinggame.com/login";
                      
                     }
                 } else {
